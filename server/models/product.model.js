@@ -16,7 +16,7 @@ const productSchema = new Schema(
     },
     rating: {
       type: Number,
-      enum: [1, 2, 3, 4, 5],
+      enum: [0, 1, 2, 3, 4, 5],
     },
   },
   { timestamps: true }
