@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
-const cartSchema = new mongoose.Schema(
+
+const cartSchema = new Schema(
   {
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
     items: [
@@ -30,6 +31,6 @@ const cartSchema = new mongoose.Schema(
   }
 );
 
-const Card = model("Card", cardSchema);
+const Cart = model("Cart", cartSchema);
 
-module.exports = Card;
+module.exports = Cart;
