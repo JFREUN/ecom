@@ -13,6 +13,23 @@ const theme = createTheme({
   typography: {
     fontFamily: raleway.style.fontFamily,
   },
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#9370DB',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+    background: {
+      default: '#E6E6FA',
+      paper: '#F5F5F5',
+    },
+    text: {
+      primary: '#333333',
+      secondary: '#cccccc',
+    },
+  },
 });
 
 export default theme;
