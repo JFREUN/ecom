@@ -9,9 +9,7 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
@@ -19,7 +17,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard', 'RADIANTut'];
 
 function Navbar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -44,15 +42,15 @@ function Navbar() {
         <AppBar position="static" sx={{ bgcolor: '#F5F5F5', boxShadow: 'none', color: '#333333' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Typography
-                        variant="h6"
+                        variant="h5"
                         noWrap
                         component="a"
                         href="#app-bar-with-responsive-menu"
+                        sx={{ textDecoration: "none", color: "inherit" }}
 
                     >
-                        LOGO
+                        RADIANT
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -92,7 +90,6 @@ function Navbar() {
                             ))}
                         </Menu>
                     </Box>
-                    <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
                         variant="h5"
                         noWrap
@@ -101,15 +98,10 @@ function Navbar() {
                         sx={{
                             mr: 2,
                             display: { xs: 'flex', md: 'none' },
-                            flexGrow: 1,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO
+                        RADIANT
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: "center" }} gap={2}>
                         {pages.map((page) => (
@@ -122,7 +114,6 @@ function Navbar() {
                             </Button>
                         ))}
                     </Box>
-
                     <Box sx={{ flexGrow: 0, display: 'flex' }} gap={2}>
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                             <SearchIcon />
