@@ -40,7 +40,7 @@ function Navbar() {
 
     return (
         <AppBar position="static" sx={{ bgcolor: '#F5F5F5', boxShadow: 'none', color: '#333333' }}>
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" fixed>
                 <Toolbar disableGutters>
                     <Typography
                         variant="h5"
@@ -115,13 +115,13 @@ function Navbar() {
                         ))}
                     </Box>
                     <Box sx={{ flexGrow: 0, display: 'flex' }} gap={2}>
-                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
                             <SearchIcon />
                         </IconButton>
-                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
                             <ShoppingBagOutlinedIcon />
                         </IconButton>
-                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
                             <PersonOutlineIcon />
                         </IconButton>
 
