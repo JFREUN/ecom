@@ -1,10 +1,17 @@
+'use client'
+
 import { Button, Container, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Image from "next/image";
 import headerImg from "../../public/home/header.jpg"
+import useSWR from "swr";
+import { fetcher, publicFetcher } from "@/utils/fetcher";
 export default function Home() {
   return (
-    <HeaderSection />
+    <>
+      <HeaderSection />
+      <FavouritesSection />
+    </>
   );
 }
 
@@ -21,6 +28,7 @@ const HeaderSection = () => {
 }
 
 const FavouritesSection = () => {
+  const { data, error, isLoading } = useSWR('/api/products', () => publicFetcher("/api/products"))
   const Product = [
     {
       id: 1,
@@ -29,6 +37,9 @@ const FavouritesSection = () => {
       price: "25$"
     }
   ]
+
+  if (error) return <div>error</div>
+  if (isLoading) return <div>Loading...</div>
   return (
     <Container>
       <Typography variant="h2">Our favourites</Typography>
