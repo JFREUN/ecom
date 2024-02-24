@@ -11,7 +11,7 @@ export const fetcher = async (url: string, token?: string | undefined) => {
 };
 
 export const publicFetcher = async (url: string) => {
-  await axios.get(url).then((res) => res.data);
+  return await axios.get(url).then((res) => res.data);
 };
 
 export const filterFetcher = async (
