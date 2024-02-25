@@ -52,7 +52,9 @@ const FavouritesSection = () => {
       <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
         {favourites?.map((product: Product, index: number) => (
           <Card key={product.id} sx={{ maxWidth: 345, boxShadow: "none", position: "relative", width: "30%" }}>
-            <Box sx={{ backgroundColor: "white", p: 2, borderRadius: "50%", width: 20, height: 20, justifyContent: "center", display: "flex", position: "absolute", right: 20, top: 20 }}><FavoriteBorderIcon /></Box>
+            <Box sx={{ backgroundColor: "white", p: 2, borderRadius: "50%", width: 20, height: 20, justifyContent: "center", display: "flex", position: "absolute", right: 20, top: 20 }}><FavoriteBorderIcon sx={{
+              filter: 'invert(64%) sepia(32%) saturate(4203%) hue-rotate(212deg) brightness(93%) contrast(97%)',
+            }} /></Box>
             <CardMedia
               sx={{ height: 300 }}
               image="/home/defaultProductImg.jpg"
@@ -98,7 +100,7 @@ const BenefitsSection = () => {
             <Box key={benefit.id} sx={{ display: "flex", gap: 2, my: 2, alignItems: "center", maxWidth: "80%" }}>
               <Box sx={{ backgroundColor: "white", p: 2, borderRadius: "50%", width: 20, height: 20, justifyContent: "center", display: "flex" }}>{benefit.icon}</Box>
               <Box>
-                <Typography>{benefit.title}</Typography>
+                <Typography sx={{ fontWeight: "500" }}>{benefit.title}</Typography>
                 <Typography>{benefit.description}</Typography>
               </Box>
             </Box>
