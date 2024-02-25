@@ -1,12 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 * {
   margin: 0;
   padding: 0;
 }
 
 body {
-  background-color: #f5f5f5;
-  color: hsl(0, 0%, 80%);
+  background-color: #f8f9fa;
+  color: #333333;
 }
 
 h1,
@@ -15,6 +15,22 @@ h3,
 h5 {
   font-family: "Bodoni Moda", serif;
 }
+
+a {
+  display: block;
+  margin: 2 0;
+  color: #333333;
+  text-decoration: none;
+  font-family: "Raleway", sans-serif;
+}
+
+/* NEW PALETTE */
+/* Lavender */
+/* #c8b6ff */
+
+/* White */
+/* #F8F9FA */
+
 /* Pale Lavender for backgrounds: */
 /* #E6E6FA */
 
