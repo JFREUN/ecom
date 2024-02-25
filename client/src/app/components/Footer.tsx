@@ -24,7 +24,7 @@ const Footer = () => {
     };
 
     return (
-        <Container maxWidth="xl" fixed sx={{ bgcolor: '#F5F5F5', boxShadow: 'none', color: '#333333', position: "static", py: 8 }}>
+        <Container maxWidth="xl" fixed sx={{ boxShadow: 'none', color: '#333333', position: "static", py: 8 }}>
             <Toolbar disableGutters sx={{ display: "flex", flexDirection: "column" }}>
                 <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
                     <Box>

@@ -15,8 +15,9 @@ import AdbIcon from '@mui/icons-material/Adb';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
+import Link from 'next/link';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = [{ title: 'Products', route: '/products' }, { title: 'Pricing', route: '/pricing' }, { title: 'About', route: '/about' }]
 const settings = ['Profile', 'Account', 'Dashboard', 'RADIANTut'];
 
 function Navbar() {
@@ -39,7 +40,7 @@ function Navbar() {
     };
 
     return (
-        <AppBar position="static" sx={{ bgcolor: '#F5F5F5', boxShadow: 'none', color: '#333333' }}>
+        <AppBar position="static" sx={{ bgcolor: '#f8f9fa', boxShadow: 'none', color: '#333333' }}>
             <Container maxWidth="xl" fixed>
                 <Toolbar disableGutters>
                     <Typography
@@ -83,9 +84,9 @@ function Navbar() {
                                 color: '#333333'
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center" sx={{ color: '#333333' }}>{page}</Typography>
+                            {pages.map((page, index) => (
+                                <MenuItem key={index} onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center" sx={{ color: '#333333' }}>{page.title}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -104,14 +105,15 @@ function Navbar() {
                         RADIANT
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: "center" }} gap={2}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
+                        {pages.map((page, index) => (
+                            <Link
+                                href={page.route}
+                                key={index}
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: '#333333', display: 'block' }}
+
                             >
-                                {page}
-                            </Button>
+                                {page.title}
+                            </Link>
                         ))}
                     </Box>
                     <Box sx={{ flexGrow: 0, display: 'flex' }} gap={2}>
