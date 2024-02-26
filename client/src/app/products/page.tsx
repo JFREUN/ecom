@@ -1,13 +1,22 @@
 'use client'
 import { Product } from '@/types/product'
 import { publicFetcher } from '@/utils/fetcher'
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Container, Link, Typography } from '@mui/material'
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Container, Typography } from '@mui/material'
 import React from 'react'
 import useSWR from 'swr'
+import StarIcon from '@mui/icons-material/Star';
+import Link from 'next/link'
+
 
 export default function Products() {
     const { data: products, error, isLoading } = useSWR('/api/products?query=favourites', () => publicFetcher("/api/products"))
-
+    const renderStars = (rating: number) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(<StarIcon key={i} sx={{ color: rating >= i ? 'pink' : 'inherit', width: "1rem" }} />);
+        }
+        return stars;
+    };
     if (error) return <div>error</div>
     if (isLoading) return <div>Loading...</div>
     return (
@@ -15,36 +24,34 @@ export default function Products() {
             <Typography variant="h2" mb={"3rem"}>Our products</Typography>
             <Box>
                 <Box></Box>
-                <Box sx={{ display: "grid", gridTemplateColumns: "25% 25% 25% 25%", width: "100%" }}>{products.map((product: Product) => (
-                    <Card key={product.id} sx={{ boxShadow: "none", position: "relative" }}>
-
-                        <CardMedia
-                            sx={{ height: 300 }}
-                            image="/home/defaultProductImg.jpg"
-                            title="green iguana"
-                        />
-                        <CardContent sx={{ p: 0, my: 3 }}>
-                            <Box sx={{ display: "flex", justifyContent: "space-between", }}><Typography gutterBottom variant="subtitle1" component="div">
-                                {product.name}
-                            </Typography>
-                                <Typography gutterBottom variant="subtitle1" component="div">
+                <Box sx={{ display: "grid", gridTemplateColumns: "13rem 13rem 13rem 13rem", width: "100%", gap: 5 }}>{products.map((product: Product) => (
+                    <Link key={product.id} href="">
+                        <Card sx={{ boxShadow: "none", position: "relative", }}>
+                            <CardMedia
+                                sx={{ height: 180 }}
+                                image="/home/defaultProductImg.jpg"
+                                title="green iguana"
+                            />
+                            <CardContent sx={{
+                                px: "1rem", height: "8rem", display: "flex", flexDirection: "column", justifyContent: "space-between"
+                            }}>
+                                <Box>
+                                    < Box sx={{ display: 'flex', gap: "0.5rem" }}>
+                                        {renderStars(product.rating)}
+                                    </Box>
+                                    <Typography gutterBottom variant="subtitle1" component="div" sx={{ fontWeight: "600", mt: "1rem" }}>
+                                        {product.name}
+                                    </Typography>
+                                </Box>
+                                <Typography gutterBottom variant="subtitle1" component="div" sx={{ color: "#9581EB", alignSel: "flex-end" }}>
                                     {product.price} €
                                 </Typography>
-                            </Box>
-                            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                                <Typography variant="body2" color="text.secondary" sx={{ alignSelf: "flex-start" }}>
-                                    {product.description.slice(0, 100)}
-                                </Typography>
-                                <Link href="">Read more</Link>
-                            </Box>
 
-                        </CardContent>
-                        <CardActions sx={{ p: 0 }}>
-                            <Button size="large" variant="contained" sx={{ width: "100%" }}>Add to cart</Button>
-                        </CardActions>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </Link>
                 ))}</Box>
-            </Box>
-        </Container>
+            </Box >
+        </Container >
     )
 }
