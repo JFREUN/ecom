@@ -9,6 +9,15 @@ const raleway = Raleway({
   display: 'swap',
 });
 
+// Potential Color Palette:
+
+// Main - Purple: #9581EB;
+// Lighter Purple: #CDBEF6;
+// Lightest Purple: #F6EBFF;
+// Ligher Green: #DCF0E2
+// Main - Green: #68BAA5;
+// Darker - Green: #4F8073;
+
 const theme = createTheme({
   typography: {
     fontFamily: raleway.style.fontFamily,

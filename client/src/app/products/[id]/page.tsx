@@ -6,6 +6,8 @@ import Image from "next/image";
 import useSWR from 'swr';
 import StarIcon from '@mui/icons-material/Star';
 import { publicFetcher } from '@/utils/fetcher';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 
 
 const ProductDetails = ({ params }: { params: { id: number } }) => {
@@ -22,31 +24,40 @@ const ProductDetails = ({ params }: { params: { id: number } }) => {
     if (isLoading) return <div>Loading...</div>
     console.log(params.id)
     return (
-        <Container maxWidth="xl" fixed sx={{ py: 4, px: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Container maxWidth="xl" fixed sx={{ py: 4, px: 3, display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
             <Box sx={{
                 width: "35rem", height: "35rem", position: "relative"
             }}>
                 <Image src="/home/defaultProductImg.jpg" fill={true} alt="productImg" style={{ objectFit: "cover" }} />
             </Box>
-            <Box>
+            <Box sx={{ py: "1rem", px: "4rem" }}>
                 <Typography variant="h3">{product.name}</Typography>
-                <Typography variant="subtitle1">{product.price} €</Typography>
-
-                < Box sx={{ display: 'flex', gap: "0.5rem" }}>
+                < Box sx={{ display: 'flex', gap: "0.5rem", my: "1rem" }}>
                     {renderStars(product.rating)}
                 </Box>
-                <Divider />
-                <Typography>{product.description}</Typography>
-                <Button>Add to cart</Button>
-                <Box>
-                    <Box>
-                        {/* <Box><Image></Image></Box> */}
-                        <Typography>60 Day return policy</Typography>
+                <Typography variant="subtitle1">{product.price} €</Typography>
+                <Divider sx={{ my: "1rem" }} />
+                <Typography sx={{ my: "2rem" }}>{product.description}</Typography>
+                <Divider sx={{ my: "1rem" }} />
+                <Button variant="contained" sx={{ py: "1rem", px: "4rem", width: "100%", my: "2rem" }}>Add to cart</Button>
+                <Box sx={{ display: "flex", gap: "2rem" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", backgroundColor: "#DCF0E2", borderRadius: "4px", py: "1rem", width: "50%" }}>
+                        <Box sx={{ background: "white", borderRadius: "50%", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", p: 1 }}>
+                            <LocalAtmIcon sx={{ width: "30px", height: "30px", filter: "invert(47%) sepia(27%) saturate(478%) hue-rotate(113deg) brightness(91%) contrast(86%)", borderRadius: "4px", px: "1rem" }} />
+                        </Box>
+                        <Box sx={{ display: "flex", flexDirection: "column" }}>
+                            <Typography variant="subtitle2">Unhappy? Return it!</Typography>
+                            <Typography variant="body2">60 Day return policy</Typography>
+                        </Box>
                     </Box>
-                    <Box>
-                        {/* <Box><Image></Image></Box> */}
-                        <Typography>Fast delivery blabla</Typography>
-                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", backgroundColor: "#F6EBFF", borderRadius: "4px", width: "50%" }}>
+                        <Box sx={{ background: "white", borderRadius: "50%", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", p: 1, }}>
+                            <RocketLaunchIcon sx={{ width: "30px", height: "30px", filter: "invert(50%) sepia(96%) saturate(640%) hue-rotate(213deg) brightness(94%) contrast(96%)" }} />
+                        </Box>
+                        <Box sx={{ display: "flex", flexDirection: "column" }}>
+                            <Typography variant="subtitle2">Cant wait? Fast delivery!</Typography>
+                            <Typography variant="body2">Delivered within 1 week</Typography>
+                        </Box>                    </Box>
                 </Box>
             </Box>
         </Container>

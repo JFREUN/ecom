@@ -1,8 +1,5 @@
 export const dynamic = "force-dynamic";
 import { Product } from "@/types/product";
-import { get } from "@/utils/api/get";
-import axios from "axios";
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
