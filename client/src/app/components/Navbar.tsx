@@ -47,7 +47,7 @@ function Navbar() {
                         variant="h5"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
+                        href="/"
                         sx={{ textDecoration: "none", color: "inherit" }}
 
                     >

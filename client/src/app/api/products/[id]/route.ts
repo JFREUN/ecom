@@ -5,20 +5,13 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const query = searchParams.get("query");
-
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    if (query === "favourites") {
-      const res = await fetch(`${process.env.API_URL}/api/products`);
-      const data = await res.json();
-      const favourites = data
-        .sort((a: Product, b: Product) => b.rating - a.rating)
-        .slice(0, 3);
-    }
-
-    const res = await fetch(`${process.env.API_URL}/api/products`);
+    const productId = params.id;
+    const res = await fetch(`${process.env.API_URL}/api/products/${productId}`);
     const data = await res.json();
     return Response.json(data);
   } catch (error) {

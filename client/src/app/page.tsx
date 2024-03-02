@@ -13,7 +13,6 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Link from 'next/link'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 import BalanceOutlinedIcon from '@mui/icons-material/BalanceOutlined';
 import SpaOutlinedIcon from '@mui/icons-material/SpaOutlined';
 import VolunteerActivismOutlinedIcon from '@mui/icons-material/VolunteerActivismOutlined';
@@ -51,7 +50,7 @@ const FavouritesSection = () => {
       <Typography variant="h2" mb={"3rem"}>Our favourites</Typography>
       <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
         {favourites?.map((product: Product, index: number) => (
-          <Card key={product.id} sx={{ maxWidth: 345, boxShadow: "none", position: "relative", width: "30%" }}>
+          <Card key={product._id} sx={{ maxWidth: 345, boxShadow: "none", position: "relative", width: "30%" }}>
             <Box sx={{ backgroundColor: "white", p: 2, borderRadius: "50%", width: 20, height: 20, justifyContent: "center", display: "flex", position: "absolute", right: 20, top: 20 }}><FavoriteBorderIcon sx={{
               filter: 'invert(64%) sepia(32%) saturate(4203%) hue-rotate(212deg) brightness(93%) contrast(97%)',
             }} /></Box>

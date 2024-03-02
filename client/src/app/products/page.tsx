@@ -25,7 +25,7 @@ export default function Products() {
             <Box>
                 <Box></Box>
                 <Box sx={{ display: "grid", gridTemplateColumns: "13rem 13rem 13rem 13rem", width: "100%", gap: 5 }}>{products.map((product: Product) => (
-                    <Link key={product.id} href="">
+                    <Link key={product._id} href={`/products/${product._id}`}>
                         <Card sx={{ boxShadow: "none", position: "relative", }}>
                             <CardMedia
                                 sx={{ height: 180 }}

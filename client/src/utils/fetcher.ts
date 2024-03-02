@@ -15,10 +15,8 @@ export const publicFetcher = async (url: string) => {
 };
 
 export const filterFetcher = async (
-  token: string | undefined,
+  // token: string | undefined,
   url: string,
   filter: string | boolean
 ) =>
-  await axios
-    .get(url, { headers: { filter: filter, Authorization: `Bearer ${token}` } })
-    .then((res) => res.data);
+  await axios.get(url, { headers: { filter: filter } }).then((res) => res.data);
