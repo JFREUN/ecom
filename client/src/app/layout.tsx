@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar"
 import theme from "../themes/theme";
 import { ThemeProvider } from "@mui/material";
 import Footer from "./components/Footer";
+import { GlobalProvider } from "./context/GlobalProvider";
 
 
 export const metadata: Metadata = {
@@ -21,13 +22,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body >
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <Navbar />
-            {children}
-            <Footer />
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+        <GlobalProvider>
+          <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+              <Navbar />
+              {children}
+              <Footer />
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </GlobalProvider>
       </body>
     </html>
   );
