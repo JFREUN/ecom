@@ -1,21 +1,24 @@
 'use client'
 
 import { Box, Button, Container, Divider, Typography } from '@mui/material'
-import { useRouter } from 'next/navigation'
 import Image from "next/image";
 import useSWR from 'swr';
 import StarIcon from '@mui/icons-material/Star';
 import { publicFetcher } from '@/utils/fetcher';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Cart from '@/app/components/Cart';
+import CartContext from '@/app/context/CartContext';
 
 
 const ProductDetails = ({ params }: { params: { id: number } }) => {
     const [open, setOpen] = useState(false);
     const productId = params.id;
     const { data: product, error, isLoading } = useSWR(`/api/products/${productId}`, () => publicFetcher(`/api/products/${productId}`))
+
+    const { addItemToCart } = useContext(CartContext)
+
     const renderStars = (rating: number) => {
         const stars = [];
         for (let i = 1; i <= 5; i++) {
@@ -24,13 +27,22 @@ const ProductDetails = ({ params }: { params: { id: number } }) => {
         return stars;
     };
 
+    const handleAddToCart = () => {
+        addItemToCart({
+            _id: product._id,
+            name: product.name,
+            description: product.description,
+            rating: product.rating,
+            price: product.price,
+            quantity: 1,
+        })
+        toggleDrawer(true)
+    }
+
     const toggleDrawer = (newOpen: boolean) => {
         setOpen(newOpen);
     }
 
-    const addToCart = () => {
-
-    }
 
     if (error) return <div>error</div>
     if (isLoading) return <div>Loading...</div>
@@ -51,7 +63,7 @@ const ProductDetails = ({ params }: { params: { id: number } }) => {
                     <Divider sx={{ my: "1rem" }} />
                     <Typography sx={{ my: "2rem" }}>{product.description}</Typography>
                     <Divider sx={{ my: "1rem" }} />
-                    <Button variant="contained" sx={{ py: "1rem", px: "4rem", width: "100%", my: "2rem" }} onClick={() => toggleDrawer(true)}>Add to cart</Button>
+                    <Button variant="contained" sx={{ py: "1rem", px: "4rem", width: "100%", my: "2rem" }} onClick={handleAddToCart}>Add to cart</Button>
                     <Box sx={{ display: "flex", gap: "2rem" }}>
                         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", backgroundColor: "#DCF0E2", borderRadius: "4px", py: "1rem", width: "50%" }}>
                             <Box sx={{ background: "white", borderRadius: "50%", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", p: 1 }}>

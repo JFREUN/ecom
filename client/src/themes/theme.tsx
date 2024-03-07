@@ -47,7 +47,27 @@ const theme = createTheme({
               color: '#9581EB',
             },
           }),
+          ...(ownerState.variant === 'outlined' &&
+          {
+            backgroundColor: 'transparent',
+            border: "1px #9581EB solid",
+            '&:hover': {
+              backgroundColor: 'rgba(147, 127, 235, 0.1);',
+              border: "1px #9581EB solid",
+
+            },
+          }),
         }),
+
+      },
+    },
+    MuiButtonGroup: {
+      styleOverrides: {
+        root: {
+          '& .MuiButtonGroup-firstButton': {
+            borderRightColor: '#9581EB',
+          },
+        },
       },
     },
 
