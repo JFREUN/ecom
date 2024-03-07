@@ -16,6 +16,10 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import Link from 'next/link';
+import { Badge } from '@mui/material';
+import CartContext from '../context/CartContext';
+import { useContext, useEffect } from 'react';
+import { Product } from '@/types/product';
 
 const pages = [{ title: 'Products', route: '/products' }, { title: 'Pricing', route: '/pricing' }, { title: 'About', route: '/about' }]
 const settings = ['Profile', 'Account', 'Dashboard', 'RADIANTut'];
@@ -23,6 +27,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'RADIANTut'];
 function Navbar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+    const [totalItems, setTotalItems] = React.useState(0)
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -38,7 +43,20 @@ function Navbar() {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
-
+    const { cart } = useContext(CartContext);
+    const calculateTotalItems = (items: Product[]) => {
+        let totalItems = 0;
+        items.forEach((item) => {
+            totalItems += item.quantity;
+        });
+        return totalItems;
+    }
+    useEffect(() => {
+        if (cart) {
+            const newTotalItems = calculateTotalItems(cart.items);
+            setTotalItems(newTotalItems)
+        }
+    }, [cart])
     return (
         <AppBar position="static" sx={{ bgcolor: '#f8f9fa', boxShadow: 'none', color: '#333333' }}>
             <Container maxWidth="xl" fixed>
@@ -120,9 +138,16 @@ function Navbar() {
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
                             <SearchIcon />
                         </IconButton>
-                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
-                            <ShoppingBagOutlinedIcon />
-                        </IconButton>
+                        {cart && cart.items.length > 0 ?
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
+                                <Badge badgeContent={totalItems} color="primary" >
+                                    <ShoppingBagOutlinedIcon />
+                                </Badge>
+                            </IconButton>
+                            :
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
+                                <ShoppingBagOutlinedIcon />
+                            </IconButton>}
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
                             <PersonOutlineIcon />
                         </IconButton>
