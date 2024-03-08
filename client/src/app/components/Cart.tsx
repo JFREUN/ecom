@@ -6,6 +6,8 @@ import CartContext from '../context/CartContext';
 import CartItem from './CartItem';
 import IconButton from '@mui/material/IconButton';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import Link from 'next/link';
 
 type CartProps = {
     open: boolean;
@@ -31,20 +33,29 @@ const Cart = ({ open, toggleDrawer }: CartProps) => {
                     <IconButton onClick={() => toggleDrawer(false)}><CloseIcon /></IconButton>
                 </Box>
                 <Divider sx={{ my: "2rem" }} />
-                <Box>
-                    {cart?.items.map((item) => (
-                        <CartItem product={item} key={item._id} />
-                    ))}
-                </Box>
+                {cart && cart.items.length > 0 ?
+                    <Box>
+                        {cart?.items.map((item) => (
+                            <CartItem product={item} key={item._id} />
+                        ))}
+                    </Box> :
+                    <Box sx={{ textAlign: "center" }}>
+                        <Typography variant="h5">Your cart is empty</Typography>
+                        <Box>
+                            <SentimentVeryDissatisfiedIcon />
+                        </Box>
+                    </Box>}
                 <Divider sx={{ my: "2rem" }} />
                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <Typography variant="h5">Total</Typography>
                     <Typography variant="h5">{cart?.bill} €</Typography>
                 </Box>
-                <Button variant='contained' sx={{ width: "100%", py: "1rem", mt: "2rem", gap: 2 }}>
-                    <LocalMallOutlinedIcon />
-                    <Typography>Checkout</Typography>
-                </Button>
+                <Link href="/checkout">
+                    <Button variant='contained' sx={{ width: "100%", py: "1rem", mt: "2rem", gap: 2 }}>
+                        <LocalMallOutlinedIcon />
+                        <Typography>Checkout</Typography>
+                    </Button>
+                </Link>
             </Box>
         </Drawer>
     )
