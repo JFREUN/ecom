@@ -51,7 +51,7 @@ const Cart = ({ open, toggleDrawer }: CartProps) => {
                     <Typography variant="h5">{cart?.bill} €</Typography>
                 </Box>
                 <Link href="/checkout">
-                    <Button variant='contained' sx={{ width: "100%", py: "1rem", mt: "2rem", gap: 2 }}>
+                    <Button variant='contained' sx={{ width: "100%", py: "1rem", mt: "2rem", gap: 2 }} onClick={() => toggleDrawer(false)}>
                         <LocalMallOutlinedIcon />
                         <Typography>Checkout</Typography>
                     </Button>

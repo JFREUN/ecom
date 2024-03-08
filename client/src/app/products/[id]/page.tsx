@@ -13,7 +13,11 @@ import CartContext from '@/app/context/CartContext';
 
 
 const ProductDetails = ({ params }: { params: { id: number } }) => {
-    const [open, setOpen] = useState(false);
+    const [openCart, setOpenCart] = useState(false);
+
+    const toggleDrawer = (newOpen: boolean) => {
+        setOpenCart(newOpen);
+    }
     const productId = params.id;
     const { data: product, error, isLoading } = useSWR(`/api/products/${productId}`, () => publicFetcher(`/api/products/${productId}`))
 
@@ -38,11 +42,6 @@ const ProductDetails = ({ params }: { params: { id: number } }) => {
         })
         toggleDrawer(true)
     }
-
-    const toggleDrawer = (newOpen: boolean) => {
-        setOpen(newOpen);
-    }
-
 
     if (error) return <div>error</div>
     if (isLoading) return <div>Loading...</div>
@@ -85,7 +84,7 @@ const ProductDetails = ({ params }: { params: { id: number } }) => {
                     </Box>
                 </Box>
             </Container>
-            <Cart open={open} toggleDrawer={toggleDrawer}></Cart>
+            <Cart open={openCart} toggleDrawer={toggleDrawer}></Cart>
         </>
     )
 }
