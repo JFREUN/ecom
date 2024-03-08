@@ -23,7 +23,6 @@ export default function Home() {
       <HeaderSection />
       <FavouritesSection />
       <BenefitsSection />
-
     </>
   );
 }
