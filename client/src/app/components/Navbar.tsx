@@ -14,7 +14,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import Link from 'next/link';
-import { Badge } from '@mui/material';
+import { Badge, Button } from '@mui/material';
 import CartContext from '../context/CartContext';
 import { useContext, useEffect, useState } from 'react';
 import { Product } from '@/types/product';
@@ -135,7 +135,11 @@ function Navbar() {
                                     onClick={handleCloseNavMenu}
 
                                 >
-                                    {page.title}
+                                    <Button
+                                        sx={{ my: 2, color: '#333333', display: 'block' }}
+                                    >
+                                        {page.title}
+                                    </Button>
                                 </Link>
                             ))}
                         </Box>

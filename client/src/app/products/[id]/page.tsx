@@ -14,7 +14,6 @@ import CartContext from '@/app/context/CartContext';
 
 const ProductDetails = ({ params }: { params: { id: number } }) => {
     const [openCart, setOpenCart] = useState(false);
-
     const toggleDrawer = (newOpen: boolean) => {
         setOpenCart(newOpen);
     }
