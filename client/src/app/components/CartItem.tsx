@@ -26,9 +26,9 @@ function CartItem({ product }: CartItemProps) {
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <ButtonGroup variant="outlined" aria-label="Small button group" size="small" color="primary">
-                    <Button sx={{ color: "#9581EB" }} onClick={() => removeItemFromCart(product)}><RemoveIcon sx={{ width: "0.8rem" }} /></Button>
+                    <Button onClick={() => removeItemFromCart(product)}><RemoveIcon sx={{ width: "0.8rem" }} /></Button>
                     <Typography sx={{ width: "3rem", py: "0.5rem", textAlign: "center" }}>{product.quantity}</Typography>
-                    <Button sx={{ color: "#9581EB" }} onClick={() => addItemToCart(product)}><AddIcon sx={{ width: "0.8rem" }} /></Button>
+                    <Button onClick={() => addItemToCart(product)}><AddIcon sx={{ width: "0.8rem" }} /></Button>
                 </ButtonGroup>
             </Box>
             <IconButton onClick={() => deleteItemFromCart(product._id)}><DeleteOutlinedIcon></DeleteOutlinedIcon></IconButton>

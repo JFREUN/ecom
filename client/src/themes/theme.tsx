@@ -33,6 +33,7 @@ const theme = createTheme({
         root: ({ ownerState }) => ({
           ...(ownerState.variant === 'contained' &&
           {
+            boxShadow: "none",
             backgroundColor: '#9581EB',
             color: '#fff',
             '&:hover': {
@@ -49,6 +50,7 @@ const theme = createTheme({
           }),
           ...(ownerState.variant === 'outlined' &&
           {
+            color: "#9581EB",
             backgroundColor: 'transparent',
             border: "1px #9581EB solid",
             '&:hover': {
