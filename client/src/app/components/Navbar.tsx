@@ -21,6 +21,7 @@ import { Product } from '@/types/product';
 import Cart from './Cart';
 
 
+
 const pages = [{ title: 'Products', route: '/products' }, { title: 'Pricing', route: '/pricing' }, { title: 'About', route: '/about' }]
 const settings = ['Profile', 'Account', 'Dashboard', 'RADIANTut'];
 
@@ -157,9 +158,11 @@ function Navbar() {
                                 <IconButton onClick={() => toggleDrawer(true)} sx={{ p: 1 }}>
                                     <ShoppingBagOutlinedIcon />
                                 </IconButton>}
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
-                                <PersonOutlineIcon />
-                            </IconButton>
+                            <Link href="/login">
+                                <IconButton sx={{ p: 1 }}>
+                                    <PersonOutlineIcon />
+                                </IconButton>
+                            </Link>
 
                         </Box>
                     </Toolbar>
