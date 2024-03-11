@@ -1,15 +1,23 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
     console.log("client body", req.body);
+    const body = await req.json();
     const res = await fetch(`${process.env.API_URL}/auth/signup`, {
       method: "POST",
-      body: JSON.stringify(req.body),
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     const data = await res.json();
-    return new Response(JSON.stringify(data), { status: res.status });
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.log(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

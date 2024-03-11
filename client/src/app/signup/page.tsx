@@ -14,13 +14,8 @@ type SignupUser = {
     password: string,
 }
 const SignupPage = () => {
-    const defaultUser = {
-        name: "",
-        email: "",
-        password: "",
-    }
 
-    const [formStatus, setFormStatus] = useState<SignupUser>(defaultUser);
+
     const { storeToken, authenticateUser } = useContext(AuthContext);
     const {
         register,
@@ -30,11 +25,6 @@ const SignupPage = () => {
     const router = useRouter();
 
     const handleSignup = async (data: any) => {
-        setFormStatus((prevState) => ({
-            ...prevState,
-            email: data.email,
-            password: data.password,
-        }))
         try {
             const res = await axios.post("/api/auth/signup", JSON.stringify(data), {
                 headers: {
@@ -42,6 +32,7 @@ const SignupPage = () => {
                 }
             });
             if (res.status === 200) {
+                console.log("Signup successful");
                 router.push("/login")
             }
         } catch (error) {
@@ -50,9 +41,7 @@ const SignupPage = () => {
     }
 
     const onSubmit: SubmitHandler<SignupUser> = async (data) => {
-        console.log(data);
         await handleSignup(data);
-        setFormStatus(defaultUser);
     }
 
     return (
