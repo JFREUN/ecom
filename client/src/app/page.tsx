@@ -16,13 +16,38 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BalanceOutlinedIcon from '@mui/icons-material/BalanceOutlined';
 import SpaOutlinedIcon from '@mui/icons-material/SpaOutlined';
 import VolunteerActivismOutlinedIcon from '@mui/icons-material/VolunteerActivismOutlined';
+import { useContext, useState } from "react";
+import CartContext from "./context/CartContext";
+import Cart from "./components/Cart";
 
+type FavouritesProps = {
+  handleAddToCart: (product: Product) => void
+}
 export default function Home() {
+  const [openCart, setOpenCart] = useState(false);
+  const { addItemToCart } = useContext(CartContext)
+
+  const toggleDrawer = (newOpen: boolean) => {
+    setOpenCart(newOpen);
+  }
+
+  const handleAddToCart = (product: Product) => {
+    addItemToCart({
+      _id: product._id,
+      name: product.name,
+      description: product.description,
+      rating: product.rating,
+      price: product.price,
+      quantity: 1,
+    })
+    toggleDrawer(true)
+  }
   return (
     <>
       <HeaderSection />
-      <FavouritesSection />
+      <FavouritesSection handleAddToCart={handleAddToCart} />
       <BenefitsSection />
+      <Cart open={openCart} toggleDrawer={toggleDrawer}></Cart>
     </>
   );
 }
@@ -39,7 +64,7 @@ const HeaderSection = () => {
   )
 }
 
-const FavouritesSection = () => {
+const FavouritesSection = ({ handleAddToCart }: FavouritesProps) => {
   const { data: favourites, error, isLoading } = useSWR('/api/products?query=favourites', () => publicFetcher("/api/products?query=favourites"))
 
   if (error) return <div>error</div>
@@ -75,7 +100,7 @@ const FavouritesSection = () => {
 
             </CardContent>
             <CardActions sx={{ p: 0 }}>
-              <Button size="large" variant="contained" sx={{ width: "100%" }}>Add to cart</Button>
+              <Button size="large" variant="contained" sx={{ width: "100%" }} onClick={() => handleAddToCart(product)}>Add to cart</Button>
             </CardActions>
           </Card>))}
       </Box>
