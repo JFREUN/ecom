@@ -13,11 +13,7 @@ type LoginUser = {
 }
 
 const LoginPage = () => {
-    const defaultUser = {
-        email: "",
-        password: ""
-    }
-    const [formStatus, setFormStatus] = useState<LoginUser>(defaultUser);
+
     const { storeToken, authenticateUser } = useContext(AuthContext);
     const {
         register,
@@ -25,16 +21,15 @@ const LoginPage = () => {
     } = useForm<LoginUser>()
 
     const handleLogin = async (data: any) => {
-        setFormStatus((prevState) => ({
-            ...prevState,
-            email: data.email,
-            password: data.password,
-        }))
         try {
-            const res = await axios.post("/auth/login", formStatus);
-            const { token } = res.data;
+            const res = await axios.post("/api/auth/login", JSON.stringify(data), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const { authToken } = res.data;
             if (res.status === 200) {
-                storeToken(token);
+                storeToken(authToken);
                 authenticateUser();
             }
         } catch (error) {
@@ -44,7 +39,6 @@ const LoginPage = () => {
 
     const onSubmit: SubmitHandler<LoginUser> = async (data) => {
         await handleLogin(data);
-        setFormStatus(defaultUser);
     }
 
     return (
