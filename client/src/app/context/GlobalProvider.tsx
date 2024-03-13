@@ -5,8 +5,9 @@ import { ThemeProvider } from "@mui/material";
 import { AuthProvider } from "./AuthContext";
 
 export const GlobalProvider = ({ children }: any) => {
+    const apiUrl = process.env.API_URL;
     return (
-        <AuthProvider>
+        <AuthProvider apiUrl={apiUrl}>
             <CartProvider>
                 <AppRouterCacheProvider>
                     <ThemeProvider theme={theme}>
