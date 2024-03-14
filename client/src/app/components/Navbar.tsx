@@ -19,6 +19,7 @@ import CartContext from '../context/CartContext';
 import { useContext, useEffect, useState } from 'react';
 import { Product } from '@/types/product';
 import Cart from './Cart';
+import { AuthContext } from '../context/AuthContext';
 
 
 
@@ -49,6 +50,8 @@ function Navbar() {
         setAnchorElUser(null);
     };
     const { cart } = useContext(CartContext);
+    const { isLoggedIn } = useContext(AuthContext);
+    console.log(isLoggedIn)
     const calculateTotalItems = (items: Product[]) => {
         let totalItems = 0;
         items.forEach((item) => {
@@ -158,12 +161,19 @@ function Navbar() {
                                 <IconButton onClick={() => toggleDrawer(true)} sx={{ p: 1 }}>
                                     <ShoppingBagOutlinedIcon />
                                 </IconButton>}
-                            <Link href="/login">
+                            {isLoggedIn ? <Link href="/profile">
+
+                                <IconButton sx={{ p: 1 }}>
+                                    <Badge color="secondary" variant="dot">
+                                        <PersonOutlineIcon />
+                                    </Badge>
+                                </IconButton>
+
+                            </Link> : <Link href="/login">
                                 <IconButton sx={{ p: 1 }}>
                                     <PersonOutlineIcon />
                                 </IconButton>
-                            </Link>
-
+                            </Link>}
                         </Box>
                     </Toolbar>
                 </Container>

@@ -1,7 +1,6 @@
 'use client'
-import { Box, Icon, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Typography } from '@mui/material'
+import { Box, Icon, IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Typography } from '@mui/material'
 import Container from '@mui/material/Container'
-import Image from "next/image";
 import React, { useContext, useEffect, useState } from 'react'
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { AuthContext } from '../context/AuthContext';
@@ -15,6 +14,9 @@ import { Account } from '../components/profile/account';
 import { Favourites } from '../components/profile/favourites';
 import { Payment } from '../components/profile/payment';
 import { Password } from '../components/profile/password';
+import CloseIcon from '@mui/icons-material/Close';
+import { useRouter } from 'next/navigation';
+
 
 const ProfilePage = () => {
     const defaultLinks = {
@@ -24,8 +26,9 @@ const ProfilePage = () => {
         payment: false,
         password: false,
     }
-    const { user } = useContext(AuthContext);
-    const [allLinks, setAllLinks] = useState(defaultLinks)
+    const { user, logOutUser, isLoggedIn } = useContext(AuthContext);
+    const [allLinks, setAllLinks] = useState(defaultLinks);
+    const router = useRouter();
 
     const handleNav = (state: string) => {
         setAllLinks(defaultLinks);
@@ -74,16 +77,22 @@ const ProfilePage = () => {
         if (user) setAllLinks((prevState) => ({ ...prevState, orders: true }))
     }, [user])
 
+    if (!isLoggedIn) router.push("/");
     return (
         <Container maxWidth="xl" fixed sx={{ py: "4rem", px: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <Box sx={{
                 border: "1px solid #C5C5C5", p: 2, borderRadius: "5px", width: "20rem", pb: 5
             }}>
-                <Box sx={{ display: "flex", gap: 2, alignItems: "center", p: 1 }}>
-                    <Icon sx={{ backgroundColor: "#CDBEF6", color: "white", borderRadius: "50%", p: 1 }}>
-                        <PersonOutlinedIcon />
-                    </Icon>
-                    <Typography>{user?.name}</Typography>
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "center", p: 1 }}>
+                        <Icon sx={{ backgroundColor: "#CDBEF6", color: "white", borderRadius: "50%", p: 1 }}>
+                            <PersonOutlinedIcon />
+                        </Icon>
+                        <Typography>{user?.name}</Typography>
+                    </Box>
+                    <IconButton onClick={logOutUser}>
+                        <CloseIcon />
+                    </IconButton>
                 </Box>
                 <Paper sx={{ width: 320, maxWidth: '100%', borderStyle: "none", boxShadow: "none", background: "inherit" }}>
                     <MenuList>
