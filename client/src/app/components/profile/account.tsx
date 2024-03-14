@@ -13,7 +13,7 @@ export const Account = () => {
     const {
         register,
         handleSubmit,
-    } = useForm<LoginUser>()
+    } = useForm<User>()
 
     const handleUpdateUser = async (data: any) => {
         const updateUser: User = {
@@ -22,7 +22,7 @@ export const Account = () => {
             name: data.name,
         }
         try {
-            const res = await axios.patch("/api/auth/login", JSON.stringify(updateUser), {
+            const res = await axios.patch(`/api/user/${user?._id}`, JSON.stringify(updateUser), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -35,13 +35,13 @@ export const Account = () => {
         }
     }
 
-    const onSubmit: SubmitHandler<LoginUser> = async (data) => {
+    const onSubmit: SubmitHandler<User> = async (data) => {
         await handleUpdateUser(data);
     }
     return (
         <Box sx={{ width: 400 }}>
             <Typography variant='h2'>My account</Typography>
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 4 }}>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Icon sx={{ backgroundColor: "#CDBEF6", color: "white", borderRadius: "50%", p: 1, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -49,9 +49,11 @@ export const Account = () => {
                         </Icon>
                         <Button>Update</Button>
                     </Box>
-                    <TextField placeholder={user?.name} label="Name" />
-                    <TextField placeholder={user?.email} label="Email" />
-                    <Button variant='contained' sx={{ mt: 2 }}>Submit Changes</Button>
+                    <TextField placeholder="Name" label="Name" defaultValue={user?.name}
+                        {...register("name")} />
+                    <TextField placeholder="Email" label="Email" defaultValue={user?.email}
+                        {...register("email")} />
+                    <Button variant='contained' sx={{ mt: 2 }} onClick={handleSubmit(onSubmit)}>Submit Changes</Button>
                 </Box>
             </form>
         </Box>
