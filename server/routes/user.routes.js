@@ -14,6 +14,7 @@ router.patch("/users/:userId", (req, res, next) => {
   const { userId } = req.params;
 
   User.findByIdAndUpdate(userId, req.body, { new: true })
+    .populate("favourites")
     .then((updatedUser) => {
       res.json(updatedUser);
     })

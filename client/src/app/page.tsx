@@ -19,6 +19,12 @@ import VolunteerActivismOutlinedIcon from '@mui/icons-material/VolunteerActivism
 import { useContext, useState } from "react";
 import CartContext from "./context/CartContext";
 import Cart from "./components/Cart";
+import IconButton from '@mui/material/IconButton';
+import { User } from "@/types/user";
+import { AuthContext } from "./context/AuthContext";
+import axios from "axios";
+import { SubmitHandler } from "react-hook-form";
+
 
 type FavouritesProps = {
   handleAddToCart: (product: Product) => void
@@ -67,6 +73,30 @@ const HeaderSection = () => {
 const FavouritesSection = ({ handleAddToCart }: FavouritesProps) => {
   const { data: favourites, error, isLoading } = useSWR('/api/products?query=favourites', () => publicFetcher("/api/products?query=favourites"))
 
+  const { user } = useContext(AuthContext)
+  const handleUpdateUser = async (data: any) => {
+    const updateUser: User = {
+      _id: user?._id || "",
+      email: data.email,
+      name: data.name,
+    }
+    try {
+      const res = await axios.patch(`/api/user/${user?._id}`, JSON.stringify(updateUser), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (res.status === 200) {
+        console.log("User update successful!")
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  }
+
+  const onSubmit: SubmitHandler<User> = async (data) => {
+    await handleUpdateUser(data);
+  }
   if (error) return <div>error</div>
   if (isLoading) return <div>Loading...</div>
   return (
@@ -75,9 +105,13 @@ const FavouritesSection = ({ handleAddToCart }: FavouritesProps) => {
       <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
         {favourites?.map((product: Product, index: number) => (
           <Card key={product._id} sx={{ maxWidth: 345, boxShadow: "none", position: "relative", width: "30%" }}>
-            <Box sx={{ backgroundColor: "white", p: 2, borderRadius: "50%", width: 20, height: 20, justifyContent: "center", display: "flex", position: "absolute", right: 20, top: 20 }}><FavoriteBorderIcon sx={{
-              filter: 'invert(64%) sepia(32%) saturate(4203%) hue-rotate(212deg) brightness(93%) contrast(97%)',
-            }} /></Box>
+            <IconButton>
+              <Box sx={{ backgroundColor: "white", p: 2, borderRadius: "50%", width: 20, height: 20, justifyContent: "center", display: "flex", position: "absolute", right: 20, top: 20 }}>
+                <FavoriteBorderIcon sx={{
+                  filter: 'invert(64%) sepia(32%) saturate(4203%) hue-rotate(212deg) brightness(93%) contrast(97%)',
+                }} />
+              </Box>
+            </IconButton>
             <CardMedia
               sx={{ height: 300 }}
               image="/home/defaultProductImg.jpg"
