@@ -8,10 +8,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
-type LoginUser = {
-    email: string,
-    password: string,
-}
+import { LoginUser } from '@/types/user';
+
 
 const LoginPage = () => {
 

@@ -1,13 +1,7 @@
 'use client'
 import React, { useState, useEffect, createContext } from "react";
 import axios from "axios";
-
-
-type User = {
-    id: string;
-    name: string;
-    email: string;
-};
+import { User } from "@/types/user";
 
 type AuthContextType = {
     isLoggedIn: boolean;
@@ -31,7 +25,7 @@ const AuthContext = createContext<AuthContextType>({
 function AuthProvider({ children, apiUrl }: any) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<User | null>(null);
 
     const storeToken = (token: string) => {
         localStorage.setItem("authToken", token);
