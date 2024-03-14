@@ -7,6 +7,7 @@ import headerImg from "../../../public/login-signup/loginImg.jpg"
 import { SubmitHandler, useForm } from 'react-hook-form';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { useRouter } from 'next/navigation';
 type LoginUser = {
     email: string,
     password: string,
@@ -20,6 +21,8 @@ const LoginPage = () => {
         handleSubmit,
     } = useForm<LoginUser>()
 
+    const router = useRouter();
+
     const handleLogin = async (data: any) => {
         try {
             const res = await axios.post("/api/auth/login", JSON.stringify(data), {
@@ -31,6 +34,7 @@ const LoginPage = () => {
             if (res.status === 200) {
                 storeToken(authToken);
                 authenticateUser();
+                router.push("/profile")
             }
         } catch (error) {
             console.error("Login failed:", error);
