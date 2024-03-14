@@ -17,7 +17,17 @@ import { Password } from '../components/profile/password';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
 
+type ProfileLink = {
+    icon: React.JSX.Element;
+    name: string;
+    state: boolean;
+    setState: () => void;
+    component: React.JSX.Element;
+}
 
+type ProfileNavProps = {
+    profileLinks: ProfileLink[];
+}
 const ProfilePage = () => {
     const defaultLinks = {
         orders: false,
@@ -26,7 +36,7 @@ const ProfilePage = () => {
         payment: false,
         password: false,
     }
-    const { user, logOutUser, isLoggedIn } = useContext(AuthContext);
+    const { user, isLoggedIn } = useContext(AuthContext);
     const [allLinks, setAllLinks] = useState(defaultLinks);
     const router = useRouter();
 
@@ -35,7 +45,7 @@ const ProfilePage = () => {
         setAllLinks(prevState => ({ ...prevState, [state]: true }))
     }
 
-    const profileLinks = [
+    const profileLinks: ProfileLink[] = [
         {
             icon: <ManageAccountsOutlinedIcon />,
             name: "My Orders",
@@ -79,43 +89,50 @@ const ProfilePage = () => {
 
     if (!isLoggedIn) router.push("/");
     return (
-        <Container maxWidth="xl" fixed sx={{ py: "4rem", px: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <Box sx={{
-                border: "1px solid #C5C5C5", p: 2, borderRadius: "5px", width: "20rem", pb: 5
-            }}>
-                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center", p: 1 }}>
-                        <Icon sx={{ backgroundColor: "#CDBEF6", color: "white", borderRadius: "50%", p: 1 }}>
-                            <PersonOutlinedIcon />
-                        </Icon>
-                        <Typography>{user?.name}</Typography>
-                    </Box>
-                    <IconButton onClick={logOutUser}>
-                        <CloseIcon />
-                    </IconButton>
-                </Box>
-                <Paper sx={{ width: 320, maxWidth: '100%', borderStyle: "none", boxShadow: "none", background: "inherit" }}>
-                    <MenuList>
-                        {profileLinks.map((link, index) => (
-                            <MenuItem key={index} sx={{ py: 2 }} onClick={link.setState}>
-                                <ListItemIcon>
-                                    {link.icon}
-                                </ListItemIcon>
-                                <ListItemText>{link.name}</ListItemText>
-                            </MenuItem>
-                        ))}
-                    </MenuList>
-                </Paper>
-            </Box >
-            <Box>
-                {profileLinks.map(({ component, state }, index) => (
-                    (<Box key={index}>
-                        {state && component}
-                    </Box>)
-                ))}
-            </Box>
+        <Container maxWidth="xl" fixed sx={{ py: "4rem", px: 3, display: "flex", gap: 3 }}>
+            <ProfileNav profileLinks={profileLinks} />
+            {profileLinks.map(({ component, state }, index) => (
+                (<Box key={index}>
+                    {state && component}
+                </Box>)
+            ))}
         </Container >
     )
 }
+
+
+const ProfileNav = ({ profileLinks }: ProfileNavProps) => {
+    const { user, logOutUser } = useContext(AuthContext);
+    return (
+        <Box sx={{
+            border: "1px solid #C5C5C5", p: 2, borderRadius: "5px", width: "20rem", pb: 5
+        }}>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center", p: 1 }}>
+                    <Icon sx={{ backgroundColor: "#CDBEF6", color: "white", borderRadius: "50%", p: 1 }}>
+                        <PersonOutlinedIcon />
+                    </Icon>
+                    <Typography>{user?.name}</Typography>
+                </Box>
+                <IconButton onClick={logOutUser}>
+                    <CloseIcon />
+                </IconButton>
+            </Box>
+            <Paper sx={{ width: 320, maxWidth: '100%', borderStyle: "none", boxShadow: "none", background: "inherit" }}>
+                <MenuList>
+                    {profileLinks.map((link, index) => (
+                        <MenuItem key={index} sx={{ py: 2 }} onClick={link.setState}>
+                            <ListItemIcon>
+                                {link.icon}
+                            </ListItemIcon>
+                            <ListItemText>{link.name}</ListItemText>
+                        </MenuItem>
+                    ))}
+                </MenuList>
+            </Paper>
+        </Box >
+    )
+}
+
 
 export default ProfilePage;
