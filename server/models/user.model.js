@@ -23,6 +23,23 @@ const userSchema = new Schema(
       type: String,
       enum: ["Admin", "Member"],
     },
+    favourites: [
+      {
+        itemId: {
+          type: Schema.Types.ObjectId,
+          ref: "Item",
+          required: true,
+        },
+        name: String,
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1,
+          default: 1,
+        },
+        price: Number,
+      },
+    ],
 
     // paymentCard: {
     //   name: String,
