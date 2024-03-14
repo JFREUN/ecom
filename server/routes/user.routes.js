@@ -10,4 +10,13 @@ router.get("/users", (req, res, next) => {
     .catch((err) => console.log("Get user error: ", err));
 });
 
+router.patch("/users/:userId", (req, res, next) => {
+  const { userId } = req.params;
+
+  User.findByIdAndUpdate(userId, req.body, { new: true })
+    .then((updatedUser) => {
+      res.json(updatedUser);
+    })
+    .catch((err) => console.log("Update one user error: ", err));
+});
 module.exports = router;
