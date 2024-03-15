@@ -9,7 +9,7 @@ import axios from 'axios';
 
 
 export const Account = () => {
-    const { user } = useContext(AuthContext);
+    const { user, setUser } = useContext(AuthContext);
     const {
         register,
         handleSubmit,
@@ -17,9 +17,10 @@ export const Account = () => {
 
     const handleUpdateUser = async (data: any) => {
         const updateUser: User = {
-            _id: user?._id || "",
+            _id: user?._id || " ",
             email: data.email,
             name: data.name,
+            favourites: user?.favourites || [],
         }
         try {
             const res = await axios.patch(`/api/user/${user?._id}`, JSON.stringify(updateUser), {
@@ -28,6 +29,7 @@ export const Account = () => {
                 }
             });
             if (res.status === 200) {
+                setUser(updateUser)
                 console.log("User update successful!")
             }
         } catch (error) {
