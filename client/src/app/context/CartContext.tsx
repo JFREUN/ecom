@@ -1,15 +1,11 @@
 'use client'
 import { Cart } from "@/types/cart";
+import { CartContextType } from "@/types/context";
 import { Product } from "@/types/product";
 import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 
-type CartContextType = {
-  cart: Cart | null;
-  addItemToCart: (product: Product) => void;
-  deleteItemFromCart: (id: number) => void;
-  removeItemFromCart: (product: Product) => void;
-}
+
 
 const CartContext = createContext<CartContextType>({
   cart: null,
