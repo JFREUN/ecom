@@ -10,6 +10,7 @@ type AuthContextType = {
     logOutUser: () => void;
     storeToken: (token: string) => void;
     authenticateUser: () => void;
+    setUser: (prevState: User | null) => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType>({
     logOutUser: () => { },
     storeToken: (token: string) => { },
     authenticateUser: () => { },
+    setUser: (prevState) => { },
 });
 
 
@@ -117,6 +119,7 @@ function AuthProvider({ children, apiUrl }: any) {
                 storeToken,
                 authenticateUser,
                 logOutUser,
+                setUser,
             }}
         >
             {children}
