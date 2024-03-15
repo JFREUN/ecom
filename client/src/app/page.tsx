@@ -24,6 +24,7 @@ import { User } from "@/types/user";
 import { AuthContext } from "./context/AuthContext";
 import axios from "axios";
 import { SubmitHandler } from "react-hook-form";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
 type FavouritesProps = {
@@ -72,31 +73,46 @@ const HeaderSection = () => {
 
 const FavouritesSection = ({ handleAddToCart }: FavouritesProps) => {
   const { data: favourites, error, isLoading } = useSWR('/api/products?query=favourites', () => publicFetcher("/api/products?query=favourites"))
+  const { user, setUser } = useContext(AuthContext);
 
-  const { user } = useContext(AuthContext)
-  const handleUpdateUser = async (data: any) => {
-    const updateUser: User = {
-      _id: user?._id || "",
-      email: data.email,
-      name: data.name,
-    }
-    try {
-      const res = await axios.patch(`/api/user/${user?._id}`, JSON.stringify(updateUser), {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      if (res.status === 200) {
-        console.log("User update successful!")
+  const handleFavourites = async (productId: number) => {
+    if (user && user.favourites) {
+      const isFavourite = user.favourites.some((favourite: Product) => favourite._id === productId);
+
+      let newUserFaves;
+
+      if (isFavourite) {
+        newUserFaves = user.favourites.filter((favourite: Product) => favourite._id !== productId);
+      } else {
+        const selectedProduct = favourites.find((favourite: Product) => favourite._id === productId); // Assuming there's a function to fetch product details by ID
+        newUserFaves = [...user.favourites, selectedProduct];
       }
-    } catch (error) {
-      console.error("Login failed:", error);
+
+      const updatedUser = {
+        ...user,
+        favourites: newUserFaves,
+      };
+
+      try {
+        const res = await axios.patch(`/api/user/${user?._id}`, JSON.stringify(updatedUser), {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        if (res.status === 200) {
+          setUser(updatedUser)
+          console.log("Add to favourites successful!")
+        }
+      } catch (error) {
+        console.error("Add failed:", error);
+      }
     }
   }
 
-  const onSubmit: SubmitHandler<User> = async (data) => {
-    await handleUpdateUser(data);
+  const isFavourite = (productId: number) => {
+    if (user && user.favourites) return user?.favourites.find((favourite: Product) => favourite._id === productId);
   }
+
   if (error) return <div>error</div>
   if (isLoading) return <div>Loading...</div>
   return (
@@ -105,13 +121,22 @@ const FavouritesSection = ({ handleAddToCart }: FavouritesProps) => {
       <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
         {favourites?.map((product: Product, index: number) => (
           <Card key={product._id} sx={{ maxWidth: 345, boxShadow: "none", position: "relative", width: "30%" }}>
-            <IconButton>
-              <Box sx={{ backgroundColor: "white", p: 2, borderRadius: "50%", width: 20, height: 20, justifyContent: "center", display: "flex", position: "absolute", right: 20, top: 20 }}>
-                <FavoriteBorderIcon sx={{
-                  filter: 'invert(64%) sepia(32%) saturate(4203%) hue-rotate(212deg) brightness(93%) contrast(97%)',
-                }} />
-              </Box>
-            </IconButton>
+
+            <Box >
+              {isFavourite(product._id) ?
+                <IconButton onClick={() => handleFavourites(product._id)} sx={{ backgroundColor: "white", p: 3, borderRadius: "50%", width: 20, height: 20, justifyContent: "center", display: "flex", position: "absolute", right: 20, top: 20 }}>
+                  <FavoriteIcon sx={{
+                    filter: 'invert(64%) sepia(32%) saturate(4203%) hue-rotate(212deg) brightness(93%) contrast(97%)',
+                  }} />
+                </IconButton>
+                :
+                <IconButton onClick={() => handleFavourites(product._id)} sx={{ backgroundColor: "white", p: 3, borderRadius: "50%", width: 20, height: 20, justifyContent: "center", display: "flex", position: "absolute", right: 20, top: 20 }}>
+                  <FavoriteBorderIcon sx={{
+                    filter: 'invert(64%) sepia(32%) saturate(4203%) hue-rotate(212deg) brightness(93%) contrast(97%)',
+                  }} />
+                </IconButton>
+              }
+            </Box>
             <CardMedia
               sx={{ height: 300 }}
               image="/home/defaultProductImg.jpg"

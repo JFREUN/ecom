@@ -36,7 +36,7 @@ const Cart = ({ open, toggleDrawer }: CartProps) => {
                 {cart && cart.items.length > 0 ?
                     <Box>
                         {cart?.items.map((item) => (
-                            <CartItem product={item} key={item._id} />
+                            <CartItem product={item} key={item._id} isFavourite={false} />
                         ))}
                     </Box> :
                     <Box sx={{ textAlign: "center" }}>
