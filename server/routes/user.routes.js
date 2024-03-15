@@ -16,7 +16,9 @@ router.patch("/users/:userId", (req, res, next) => {
   User.findByIdAndUpdate(userId, req.body, { new: true })
     .populate("favourites")
     .then((updatedUser) => {
-      res.json(updatedUser);
+      const { _id, email, name, favourites } = updatedUser; //take out password hash
+      const newUpdatedUser = { _id, email, name, favourites };
+      res.json(newUpdatedUser);
     })
     .catch((err) => console.log("Update one user error: ", err));
 });
