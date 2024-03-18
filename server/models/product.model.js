@@ -18,6 +18,7 @@ const productSchema = new Schema(
       type: Number,
       enum: [0, 1, 2, 3, 4, 5],
     },
+    imageUrl: { type: String, required: true },
   },
   { timestamps: true }
 );
