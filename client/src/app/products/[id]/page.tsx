@@ -38,6 +38,7 @@ const ProductDetails = ({ params }: { params: { id: number } }) => {
             rating: product.rating,
             price: product.price,
             quantity: 1,
+            imageUrl: product.imageUrl,
         })
         toggleDrawer(true)
     }
@@ -50,7 +51,7 @@ const ProductDetails = ({ params }: { params: { id: number } }) => {
                 <Box sx={{
                     width: "35rem", height: "35rem", position: "relative"
                 }}>
-                    <Image src="/home/defaultProductImg.jpg" fill={true} alt="productImg" style={{ objectFit: "cover" }} />
+                    <Image src={product.imageUrl} fill={true} alt="productImg" style={{ objectFit: "cover" }} />
                 </Box>
                 <Box sx={{ py: "1rem", px: "4rem" }}>
                     <Typography variant="h3">{product.name}</Typography>

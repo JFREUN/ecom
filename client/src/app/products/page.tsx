@@ -29,7 +29,7 @@ export default function Products() {
                         <Card sx={{ boxShadow: "none", position: "relative", }}>
                             <CardMedia
                                 sx={{ height: 180 }}
-                                image="/home/defaultProductImg.jpg"
+                                image={product.imageUrl}
                                 title="green iguana"
                             />
                             <CardContent sx={{

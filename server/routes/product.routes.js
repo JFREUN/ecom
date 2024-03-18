@@ -1,15 +1,17 @@
 const Product = require("../models/product.model");
 const mongoose = require("mongoose");
 const router = require("express").Router();
+const fileUploader = require("../config/cloudinary.config");
 
 router.post("/products", (req, res, next) => {
-  const { name, description, price } = req.body;
+  const { name, description, price, imageUrl } = req.body;
 
   Product.create({
     name,
     description,
     price,
     rating: 0,
+    imageUrl,
   })
     .then((response) => {
       res.status(200).json(response);
@@ -48,19 +50,17 @@ router.get("/products/:productId", (req, res, next) => {
     .catch((err) => console.log("Get one product error: ", err));
 });
 
-router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
-  // console.log("file is: ", req.file)
-
-  if (!req.file) {
-    next(new Error("No file uploaded!"));
-    return;
+router.post(
+  "/products/image/upload",
+  fileUploader.single("imageUrl"),
+  (req, res, next) => {
+    if (!req.file) {
+      next(new Error("No file uploaded!"));
+      return;
+    }
+    res.json({ fileUrl: req.file.path });
   }
-
-  // Get the URL of the uploaded file and send it as a response.
-  // 'fileUrl' can be any name, just make sure you remember to use the same when accessing it on the frontend
-
-  res.json({ fileUrl: req.file.path });
-});
+);
 
 router.put("/products/:productId", (req, res, next) => {
   const { productId } = req.params;
