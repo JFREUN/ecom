@@ -7,6 +7,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import CartContext from '../context/CartContext';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { CartContextType } from '@/types/context';
+import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 type CartItemProps = {
     product: Product;
@@ -51,12 +53,37 @@ const CartButtons = ({ product, cartContext }: CartItemButtonProps) => {
 }
 
 const FavouritesButtons = ({ product, cartContext }: CartItemButtonProps) => {
-    const { deleteItemFromCart } = cartContext as CartContextType;
+    const { addItemToCart } = cartContext;
+    const { user, setUser } = useContext(AuthContext);
+    console.log(user)
+    const removeFavourite = async (productId: number) => {
+        if (user && user.favourites) {
+            const newUserFaves = user.favourites.filter((favourite: Product) => favourite._id !== productId);
+            const updatedUser = {
+                ...user,
+                favourites: newUserFaves,
+            };
+
+            try {
+                const res = await axios.patch(`/api/user/${user._id}`, JSON.stringify(updatedUser), {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (res.status === 200) {
+                    setUser(updatedUser)
+                    console.log("Add to favourites successful!")
+                }
+            } catch (error) {
+                console.error("Add failed:", error);
+            }
+        }
+    }
 
     return (
         <Box sx={{ display: "flex", gap: 2 }}>
-            <Button variant="contained">Add to Cart</Button>
-            <IconButton onClick={() => deleteItemFromCart(product._id)}><DeleteOutlinedIcon></DeleteOutlinedIcon></IconButton>
+            <Button variant="contained" onClick={() => addItemToCart(product)}>Add to Cart</Button>
+            <IconButton onClick={() => removeFavourite(product._id)}><DeleteOutlinedIcon></DeleteOutlinedIcon></IconButton>
         </Box >
     )
 }
