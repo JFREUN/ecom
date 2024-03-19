@@ -12,10 +12,12 @@ const CartContext = createContext<CartContextType>({
   addItemToCart: (product: Product) => { },
   deleteItemFromCart: (id: number) => { },
   removeItemFromCart: (product: Product) => { },
+  cartIsLoading: true,
 });
 
 export const CartProvider = ({ children }: any) => {
   const [cart, setCart] = useState<Cart | null>(null);
+  const [cartIsLoading, setCartIsLoading] = useState(true)
 
   const setCartToState = () => {
     const currentCart = localStorage.getItem("cart");
@@ -26,6 +28,7 @@ export const CartProvider = ({ children }: any) => {
           ? JSON.parse(currentCart)
           : []
       );
+      setCartIsLoading(false);
     }
 
   };
@@ -44,6 +47,7 @@ export const CartProvider = ({ children }: any) => {
     rating,
     price,
     quantity = 1,
+    imageUrl,
   }: Product) => {
     const item: Product = {
       _id,
@@ -52,6 +56,7 @@ export const CartProvider = ({ children }: any) => {
       name,
       price,
       quantity,
+      imageUrl
     };
 
     const existingItemIndex = cart?.items.findIndex((i) => i._id === item._id);
@@ -106,6 +111,7 @@ export const CartProvider = ({ children }: any) => {
       addItemToCart,
       deleteItemFromCart,
       removeItemFromCart,
+      cartIsLoading
     }}
   >
     {children}

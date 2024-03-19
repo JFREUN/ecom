@@ -13,11 +13,11 @@ import Image from "next/image";
 import { Cart, ContactDetails, ShippingDetails } from '@/types/cart';
 import ContactForm from '../components/checkout/ContactForm';
 import Shipping from '../components/checkout/Shipping';
-
-
+import { AuthContext } from '../context/AuthContext';
 
 type CartProps = {
     cart: Cart | null;
+    cartIsLoading: boolean;
     setShow?: (state: {
         cartItems: boolean,
         stepper: boolean,
@@ -26,7 +26,7 @@ type CartProps = {
 
 
 const CheckoutPage = () => {
-    const { cart } = useContext(CartContext);
+    const { cart, cartIsLoading } = useContext(CartContext);
     const [show, setShow] = useState({
         cartItems: true,
         stepper: false,
@@ -43,19 +43,20 @@ const CheckoutPage = () => {
 
     return (
         <Container sx={{ py: "4rem", px: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            {show.cartItems && <CartItems cart={cart} setShow={setShow} />}
+            {show.cartItems && <CartItems cart={cart} setShow={setShow} cartIsLoading={cartIsLoading} />}
             {show.stepper && <CartStepper />}
-            <OrderTotal cart={cart} />
+            <OrderTotal cart={cart} cartIsLoading={cartIsLoading} />
         </Container >
     )
 }
 
-const CartItems = ({ cart, setShow }: CartProps) => {
+const CartItems = ({ cart, setShow, cartIsLoading }: CartProps) => {
     const paymentMethods = [
         { name: "visa", icon: visa },
         { name: "ideal", icon: ideal },
         { name: "masterCard", icon: masterCard },
     ]
+    if (cartIsLoading) return <div>Loading....</div>
     return (
         <Box sx={{ width: "50%" }}>
             <Typography variant="h2">My cart</Typography>
@@ -108,10 +109,11 @@ const OrderTotal = ({ cart }: CartProps) => {
 }
 
 const CartStepper = () => {
+    const { user, isLoggedIn } = useContext(AuthContext)
     const defaultContact: ContactDetails = {
-        firstName: "",
-        lastName: "",
-        email: "",
+        firstName: user ? user.name : "",
+        lastName: user ? user.name : "",
+        email: user ? user.email : "",
         address1: "",
         address2: "",
         postCode: "",
@@ -126,7 +128,9 @@ const CartStepper = () => {
         country: "",
         type: "regular",
     }
-    const [activeStep, setActiveStep] = useState(0);
+
+    const defaultStep = isLoggedIn ? 1 : 0;
+    const [activeStep, setActiveStep] = useState(defaultStep);
     const [contactDetails, setContactDetails] = useState(defaultContact);
     const [shippingDetails, setShippingDetails] = useState(defaultShipping);
     const [paymentDetails, setPaymentDetails] = useState();
@@ -157,16 +161,19 @@ const CartStepper = () => {
     return (
         <Box sx={{ flexDirection: "column" }}>
             <Stepper activeStep={activeStep} >
-                {steps.map(({ label }) => (
-                    <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
-                    </Step>
-                ))}
-
+                {steps.map(({ label }, index) => {
+                    if (isLoggedIn && index === 0) return;
+                    return (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                    )
+                })}
             </Stepper>
             <Box>
                 {steps[activeStep].component}
             </Box>
+
         </Box>
     )
 }
