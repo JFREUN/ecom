@@ -1,4 +1,5 @@
 export type Product = {
+  imageUrl: string | undefined;
   _id: number;
   name: string;
   description: string;
