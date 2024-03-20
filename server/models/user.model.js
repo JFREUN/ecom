@@ -14,10 +14,15 @@ const userSchema = new Schema(
       trim: true,
       required: [true, "Password is required."],
     },
-    name: {
+    firstName: {
       type: String,
       trim: true,
-      required: [true, "Name is required."],
+      required: [true, "First name is required."],
+    },
+    lastName: {
+      type: String,
+      trim: true,
+      required: [true, "Last name is required."],
     },
     role: {
       type: String,
@@ -38,6 +43,35 @@ const userSchema = new Schema(
           default: 1,
         },
         price: Number,
+      },
+    ],
+    addresses: [
+      {
+        street: {
+          type: String,
+          required: [true, "Street is required."],
+          trim: true,
+        },
+        address2: {
+          type: String,
+          trim: true,
+        },
+        city: {
+          type: String,
+          required: [true, "City is required."],
+          trim: true,
+        },
+        postCode: {
+          type: String,
+          required: [true, "Post code is required."],
+          trim: true,
+        },
+        country: {
+          type: String,
+          required: [true, "Country is required."],
+          trim: true,
+        },
+        main: Boolean,
       },
     ],
 
