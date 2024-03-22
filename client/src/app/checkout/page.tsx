@@ -14,6 +14,7 @@ import { Cart, ContactDetails, ShippingDetails } from '@/types/cart';
 import ContactForm from '../components/checkout/ContactForm';
 import Shipping from '../components/checkout/Shipping';
 import { AuthContext } from '../context/AuthContext';
+import Payment from '../components/checkout/Payment';
 
 type CartProps = {
     cart: Cart | null;
@@ -43,8 +44,10 @@ const CheckoutPage = () => {
 
     return (
         <Container sx={{ py: "4rem", px: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            {show.cartItems && <CartItems cart={cart} setShow={setShow} cartIsLoading={cartIsLoading} />}
-            {show.stepper && <CartStepper />}
+            <Box sx={{ width: "50%" }}>
+                {show.cartItems && <CartItems cart={cart} setShow={setShow} cartIsLoading={cartIsLoading} />}
+                {show.stepper && <CartStepper setShow={setShow} />}
+            </Box>
             <OrderTotal cart={cart} cartIsLoading={cartIsLoading} />
         </Container >
     )
@@ -108,11 +111,17 @@ const OrderTotal = ({ cart }: CartProps) => {
     )
 }
 
-const CartStepper = () => {
+type CartStepperProps = {
+    setShow: React.Dispatch<React.SetStateAction<{
+        cartItems: boolean;
+        stepper: boolean;
+    }>>;
+}
+const CartStepper = ({ setShow }: CartStepperProps) => {
     const { user, isLoggedIn } = useContext(AuthContext)
     const defaultContact: ContactDetails = {
-        firstName: user ? user.name : "",
-        lastName: user ? user.name : "",
+        firstName: user ? user.firstName : "",
+        lastName: user ? user.lastName : "",
         email: user ? user.email : "",
         address1: "",
         address2: "",
@@ -139,22 +148,34 @@ const CartStepper = () => {
         setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
     };
     const handleBack = () => {
-        setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
+        setActiveStep((prevActiveStep: number) => {
+            if (prevActiveStep === 0) {
+                setShow({ cartItems: true, stepper: false })
+                return 0;
+            }
+            return prevActiveStep - 1
+        });
     };
     const handleReset = () => {
         setActiveStep(0);
     };
+    console.log("activeStep", activeStep)
 
     const steps = [
         {
             id: 0,
             label: "Contact Details",
-            component: <ContactForm handleNext={handleNext} handleBack={handleBack} setContactDetails={setContactDetails} />
+            component: <ContactForm handleNext={handleNext} handleBack={handleBack} setContactDetails={setContactDetails} setShippingDetails={setShippingDetails} />
         },
         {
             id: 1,
             label: "Shipping",
             component: <Shipping handleNext={handleNext} handleBack={handleBack} setShippingDetails={setShippingDetails} />
+        },
+        {
+            id: 2,
+            label: "Payment",
+            component: <Payment handleNext={handleNext} handleBack={handleBack} setShippingDetails={setShippingDetails} />
         }
     ]
 
