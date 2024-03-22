@@ -19,7 +19,9 @@ export const Account = () => {
         const updateUser: User = {
             _id: user?._id || " ",
             email: data.email,
-            name: data.name,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            addresses: data.addresses,
             favourites: user?.favourites || [],
         }
         try {
@@ -51,8 +53,10 @@ export const Account = () => {
                         </Icon>
                         <Button>Update</Button>
                     </Box>
-                    <TextField placeholder="Name" label="Name" defaultValue={user?.name}
-                        {...register("name")} />
+                    <TextField placeholder="First Name" label="First Name" defaultValue={user?.firstName}
+                        {...register("firstName")} />
+                    <TextField placeholder="Last Name" label="Last Name" defaultValue={user?.lastName}
+                        {...register("lastName")} />
                     <TextField placeholder="Email" label="Email" defaultValue={user?.email}
                         {...register("email")} />
                     <Button variant='contained' sx={{ mt: 2 }} onClick={handleSubmit(onSubmit)}>Submit Changes</Button>

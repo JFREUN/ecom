@@ -10,28 +10,9 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { SignupUser } from "@/types/user";
 import theme from "@/themes/theme";
-type SignupProps = {
-    handleNext: () => void;
-    handleBack: () => void;
-    setForm: React.Dispatch<React.SetStateAction<FormProps>>;
-    formStatus?: FormProps;
-}
+import { AddressForm } from "../components/AddressForm";
+import { SignupProps, FormProps } from "@/types/props";
 
-type FormProps = {
-    personalDetails: {
-        firstName: string;
-        lastName: string;
-        email: string;
-        password: string;
-    },
-    addressDetails: {
-        street: string;
-        city: string;
-        address2?: string;
-        country: string;
-        postCode: string;
-    }
-}
 const defaultFormStatus: FormProps = {
     personalDetails: {
         firstName: "",
@@ -106,7 +87,7 @@ const SignupPage = () => {
         {
             id: 1,
             label: "Address",
-            component: <AddressForm handleNext={handleNext} handleBack={handleBack} setForm={setFormStatus} />
+            component: <AddressForm handleNext={handleNext} handleBack={handleBack} setForm={setFormStatus} isSignup={true} />
         },
         {
             id: 2,
@@ -207,73 +188,7 @@ const PersonalDetails = ({ handleNext, handleBack, setForm }: SignupProps) => {
     )
 }
 
-const AddressForm = ({ handleNext, handleBack, setForm }: SignupProps) => {
-    const { register, handleSubmit } = useForm<SignupUser>()
-    const onSubmit: SubmitHandler<SignupUser> = (data) => {
-        setForm((prevState: FormProps) => ({
-            ...prevState,
-            addressDetails: {
-                ...prevState.addressDetails,
-                street: data.street,
-                address2: data.address2 ? data.address2 : "",
-                city: data.city,
-                postCode: data.postCode,
-                country: data.country,
-            }
-        }))
-        handleNext()
-    }
-    return (
-        <form onSubmit={handleSubmit(onSubmit)}>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-                <TextField
-                    required
-                    id="outlined-required"
-                    label="Street and House number"
-                    defaultValue=""
-                    {...register("street", { required: true })}
-                />
-                <TextField
-                    id="outlined"
-                    label="Optional addition, e.g. flat number"
-                    defaultValue=""
-                    {...register("address2")}
-                />
-                <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
-                    <TextField
-                        required
-                        sx={{ width: "50%" }}
-                        id="outlined-required"
-                        label="City"
-                        defaultValue=""
-                        {...register("city", { required: true })}
-                    />
-                    <TextField
-                        sx={{ width: "50%" }}
-                        required
-                        id="outlined-required"
-                        label="Post Code"
-                        defaultValue=""
-                        {...register("postCode", { required: true })}
-                    />
-                </Box>
-                <TextField
-                    required
-                    id="outlined-required"
-                    label="Country"
-                    defaultValue=""
-                    {...register("country", { required: true })}
-                />
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Button type="button" variant='outlined' sx={{ py: "1rem", width: 200 }} onClick={handleBack}>Back</Button>
-                    <Button type="submit" variant='contained' sx={{ py: "1rem", width: 200 }} onClick={handleSubmit(onSubmit)}>Next</Button>
-                </Box>
-            </Box>
-        </form>
-
-    )
-}
 
 const Recap = ({ handleNext, handleBack, setForm, formStatus }: SignupProps) => {
     const { personalDetails, addressDetails } = formStatus as FormProps;

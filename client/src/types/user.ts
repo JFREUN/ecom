@@ -4,7 +4,14 @@ export type LoginUser = {
   email: string;
   password: string;
 };
-
+export type Address = {
+  street: string;
+  city: string;
+  address2?: string;
+  country: string;
+  postCode: string;
+  main: boolean;
+};
 export type SignupUser = {
   firstName: string;
   lastName: string;
@@ -19,7 +26,9 @@ export type SignupUser = {
 
 export type User = {
   _id: string;
-  name: string;
   email: string;
   favourites?: Product[];
+  firstName: string;
+  lastName: string;
+  addresses: Address[];
 };
