@@ -41,6 +41,7 @@ export default function Home() {
   const handleAddToCart = (product: Product) => {
     addItemToCart({
       _id: product._id,
+      imageUrl: product.imageUrl,
       name: product.name,
       description: product.description,
       rating: product.rating,
@@ -65,7 +66,7 @@ const HeaderSection = () => {
       <Box sx={{ width: "50%", display: "flex", flexDirection: "column", alignItems: "flex-start" }} gap={2}>
         <Typography variant="h1" >Hydrate your face</Typography>
         <Typography variant="subtitle1" my={2} maxWidth={"30rem"}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eaque ullam adipisci minus explicabo!</Typography>
-        <Button variant="contained" sx={{ py: "1rem", px: "4rem" }}>Shop now</Button></Box>
+        <Link href="/products"><Button variant="contained" sx={{ py: "1rem", px: "4rem" }}>Shop now</Button></Link></Box>
       <Box sx={{ borderTopLeftRadius: "50%", borderTopRightRadius: "50%", overflow: "hidden" }}><Image src={headerImg} alt={""} width={500}></Image></Box>
     </Container>
   )
