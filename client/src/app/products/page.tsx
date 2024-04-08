@@ -82,7 +82,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     </Typography>
                 </Box>
                 <Typography gutterBottom variant="subtitle1" component="div" sx={{ color: "#9581EB", alignSel: "flex-end" }}>
-                    {product.price} €
+                    {product.price / 100} €
                 </Typography>
             </CardContent>
         </StyledCard>

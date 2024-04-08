@@ -9,3 +9,11 @@ export type Product = {
   createdAt?: string;
   updatedAt?: string;
 };
+
+export type StripeProduct = {
+  _id: number;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string | undefined;
+};
