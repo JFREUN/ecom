@@ -36,7 +36,7 @@ const ProductDetails = ({ params }: { params: { id: number } }) => {
             name: product.name,
             description: product.description,
             rating: product.rating,
-            price: product.price,
+            price: product.price / 100,
             quantity: 1,
             imageUrl: product.imageUrl,
         })

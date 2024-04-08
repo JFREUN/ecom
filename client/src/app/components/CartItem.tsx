@@ -24,11 +24,7 @@ function CartItem({ product, isFavourite }: CartItemProps) {
     const cartContext = useContext(CartContext)
     return (
         <Box sx={{ display: "flex", alignItems: "center", gap: "2rem", my: "2rem" }} >
-            <Box sx={{
-                width: "7rem", height: "7rem", position: "relative", borderRadius: "5px", overflow: "hidden"
-            }}>
-                <Image src="/home/defaultProductImg.jpg" fill={true} alt="productImg" style={{ objectFit: "cover" }} />
-            </Box>
+            <Image src={product.imageUrl as string} width={100} height={100} alt="productImg" style={{ objectFit: "cover" }} />
             <Box sx={{ flexGrow: 2 }}>
                 <Typography variant='subtitle1'>{product.name}</Typography>
                 <Typography>{product.price} €</Typography>
