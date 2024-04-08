@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
   const fetchedProducts = await stripe.products.list({
     limit: 8,
   });
+
   const prices = await stripe.prices.list({
     limit: 8,
   });
@@ -22,6 +23,8 @@ export async function GET(request: NextRequest) {
       description: product.description,
       imageUrl: product.images[0],
       price: selectedPrice ? (selectedPrice.unit_amount as number) : 1,
+      priceId: selectedPrice ? selectedPrice.id : "",
+      quantity: 1,
     };
 
     return returnProduct;

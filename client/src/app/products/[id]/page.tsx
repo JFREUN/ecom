@@ -58,7 +58,7 @@ const ProductDetails = ({ params }: { params: { id: number } }) => {
                     < Box sx={{ display: 'flex', gap: "0.5rem", my: "1rem" }}>
                         {renderStars(product.rating)}
                     </Box>
-                    <Typography variant="subtitle1">{product.price} €</Typography>
+                    <Typography variant="subtitle1">{product.price / 100} €</Typography>
                     <Divider sx={{ my: "1rem" }} />
                     <Typography sx={{ my: "2rem" }}>{product.description}</Typography>
                     <Divider sx={{ my: "1rem" }} />
