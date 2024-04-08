@@ -1,7 +1,7 @@
 'use client'
 import { Cart } from "@/types/cart";
 import { CartContextType } from "@/types/context";
-import { Product } from "@/types/product";
+import { Product, StripeProduct } from "@/types/product";
 import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 
@@ -9,9 +9,9 @@ import { createContext, useEffect, useState } from "react";
 
 const CartContext = createContext<CartContextType>({
   cart: null,
-  addItemToCart: (product: Product) => { },
-  deleteItemFromCart: (id: number) => { },
-  removeItemFromCart: (product: Product) => { },
+  addItemToCart: (product: StripeProduct) => { },
+  deleteItemFromCart: (id: string) => { },
+  removeItemFromCart: (product: StripeProduct) => { },
   cartIsLoading: true,
 });
 
@@ -32,7 +32,7 @@ export const CartProvider = ({ children }: any) => {
     }
 
   };
-  const calculateTotalBill = (items: Product[]): number => {
+  const calculateTotalBill = (items: StripeProduct[]): number => {
     let totalBill = 0;
     items.forEach((item) => {
       totalBill += item.price * item.quantity;
@@ -44,23 +44,23 @@ export const CartProvider = ({ children }: any) => {
     _id,
     name,
     description,
-    rating,
     price,
     quantity = 1,
     imageUrl,
-  }: Product) => {
-    const item: Product = {
+    priceId,
+  }: StripeProduct) => {
+    const item: StripeProduct = {
       _id,
       description,
-      rating,
       name,
       price,
       quantity,
-      imageUrl
+      imageUrl,
+      priceId
     };
 
     const existingItemIndex = cart?.items.findIndex((i) => i._id === item._id);
-    let newCartItems: Product[];
+    let newCartItems: StripeProduct[];
 
     if (existingItemIndex !== -1 && cart) {
       newCartItems = cart.items.map((item, index) =>
@@ -74,11 +74,11 @@ export const CartProvider = ({ children }: any) => {
     setCartToState();
   };
 
-  const removeItemFromCart = async ({ _id }: Product) => {
+  const removeItemFromCart = async ({ _id }: StripeProduct) => {
     if (!cart) return;
 
     const existingItem = cart.items.find((item) => item._id === _id)
-    let newCartItems: Product[] = [];
+    let newCartItems: StripeProduct[] = [];
 
     if (existingItem && existingItem.quantity === 1) {
       newCartItems = cart.items.filter((item) => item._id !== existingItem._id);
@@ -93,7 +93,7 @@ export const CartProvider = ({ children }: any) => {
     setCartToState();
   };
 
-  const deleteItemFromCart = (id: number) => {
+  const deleteItemFromCart = (id: string) => {
     const newCartItems = cart?.items?.filter((i) => i._id !== id);
     const totalBill = newCartItems ? calculateTotalBill(newCartItems) : 0;
     localStorage.setItem("cart", JSON.stringify({ items: newCartItems, bill: totalBill }));
