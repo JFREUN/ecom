@@ -13,6 +13,7 @@ const CartContext = createContext<CartContextType>({
   deleteItemFromCart: (id: string) => { },
   removeItemFromCart: (product: StripeProduct) => { },
   cartIsLoading: true,
+  clearCart: () => { },
 });
 
 export const CartProvider = ({ children }: any) => {
@@ -100,6 +101,10 @@ export const CartProvider = ({ children }: any) => {
     setCartToState();
   };
 
+  const clearCart = () => {
+    setCart(null);
+    localStorage.removeItem("cart")
+  }
 
   useEffect(() => {
     setCartToState();
@@ -111,7 +116,8 @@ export const CartProvider = ({ children }: any) => {
       addItemToCart,
       deleteItemFromCart,
       removeItemFromCart,
-      cartIsLoading
+      cartIsLoading,
+      clearCart
     }}
   >
     {children}

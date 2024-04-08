@@ -1,9 +1,8 @@
 'use client'
-import { Box, Button, Divider, Step, StepContent, StepLabel, Stepper, TextField, Typography } from '@mui/material'
+import { Box, Button, Divider, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material'
 import Container from '@mui/material/Container'
 import React, { useContext, useState } from 'react'
 import CartContext from '../context/CartContext';
-import { Product } from '@/types/product';
 import CartItem from '../components/CartItem';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import visa from "../../../public/paymentMethods/visa.png"
@@ -15,6 +14,7 @@ import ContactForm from '../components/checkout/ContactForm';
 import Shipping from '../components/checkout/Shipping';
 import { AuthContext } from '../context/AuthContext';
 import Payment from '../components/checkout/Payment';
+import axios from 'axios';
 
 type CartProps = {
     cart: Cart | null;
@@ -23,45 +23,71 @@ type CartProps = {
         cartItems: boolean,
         stepper: boolean,
     }) => void;
+    clearCart?: () => void,
 }
 
 
+
 const CheckoutPage = () => {
-    const { cart, cartIsLoading } = useContext(CartContext);
+    const { cart, cartIsLoading, clearCart } = useContext(CartContext);
     const [show, setShow] = useState({
         cartItems: true,
         stepper: false,
     })
-
-    const calculateTotalItems = (items: Product[]) => {
-        let totalItems = 0;
-        items.forEach((item) => {
-            totalItems += item.quantity;
-        });
-        return totalItems;
-    }
-
-
     return (
         <Container sx={{ py: "4rem", px: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <Box sx={{ width: "50%" }}>
-                {show.cartItems && <CartItems cart={cart} setShow={setShow} cartIsLoading={cartIsLoading} />}
-                {show.stepper && <CartStepper setShow={setShow} />}
+                {show.cartItems && <CartItems cart={cart} setShow={setShow} cartIsLoading={cartIsLoading} clearCart={clearCart} />}
             </Box>
             <OrderTotal cart={cart} cartIsLoading={cartIsLoading} />
         </Container >
     )
 }
 
-const CartItems = ({ cart, setShow, cartIsLoading }: CartProps) => {
+const CartItems = ({ cart, clearCart, cartIsLoading }: CartProps) => {
     const paymentMethods = [
         { name: "visa", icon: visa },
         { name: "ideal", icon: ideal },
         { name: "masterCard", icon: masterCard },
     ]
+
+    const handleCheckout = async (e: any) => {
+        e.preventDefault()
+        const lineItems = cart?.items.map((item) => {
+            const lineItem = {
+                price: item.priceId,
+                quantity: item.quantity,
+            }
+            return lineItem;
+        })
+        try {
+            const { data } = await axios.post("/api/payment",
+                {
+                    lineItems: lineItems
+                }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            clearCart!();
+            window.location.assign(data)
+            const query = new URLSearchParams(window.location.search);
+            if (query.get('success')) {
+                console.log('Order placed! You will receive an email confirmation.');
+            }
+
+            if (query.get('canceled')) {
+                console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+            }
+
+        } catch (error) {
+            console.error("Checkout failed:", error);
+        }
+    }
+
     if (cartIsLoading) return <div>Loading....</div>
     return (
-        <Box sx={{ width: "50%" }}>
+        <Box>
             <Typography variant="h2">My cart</Typography>
             {cart && cart.items.length > 0 ?
                 <Box>
@@ -75,8 +101,7 @@ const CartItems = ({ cart, setShow, cartIsLoading }: CartProps) => {
                         <SentimentVeryDissatisfiedIcon />
                     </Box>
                 </Box>}
-
-            <Button variant='contained' sx={{ width: "100%" }} onClick={() => setShow!({ cartItems: false, stepper: true })}>Order now</Button>
+            <Button variant='contained' sx={{ width: "100%" }} onClick={(e) => handleCheckout(e)}>Order now</Button>
             <Box sx={{ display: "flex", width: "100%", justifyContent: "center", gap: 2, my: 2 }}>
                 {paymentMethods.map(({ name, icon }) => (
                     <Image key={name} src={icon} alt="payment-method" width={30} />
@@ -95,9 +120,15 @@ const OrderTotal = ({ cart }: CartProps) => {
                 <Typography variant="subtitle1">{cart?.bill} €</Typography>
             </Box>
             <Typography>&#40;Shipping calculated at checkout&#41;</Typography>
-            <Divider sx={{ mt: "2rem" }} />
-
+            <Divider sx={{ my: "2rem" }} />
             <Box>
+                {cart?.items.map((item) => (
+                    <Box key={item._id} sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
+                        <Typography>{item.name}</Typography>
+                        <Typography>{item.price * item.quantity} €</Typography>
+                    </Box>
+                )
+                )}
 
                 <Divider sx={{ my: "2rem" }} />
                 <Box sx={{ display: "flex", alignItems: "stretch", justifyContent: "space-between" }}>

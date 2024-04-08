@@ -1,4 +1,4 @@
-import { Product } from '@/types/product';
+import { Product, StripeProduct } from '@/types/product';
 import Image from "next/image";
 import { Box, Button, ButtonGroup, IconButton, Typography } from '@mui/material';
 import React, { useContext } from 'react'
@@ -11,12 +11,12 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
 type CartItemProps = {
-    product: Product;
+    product: StripeProduct;
     isFavourite: boolean;
 }
 
 type CartItemButtonProps = {
-    product: Product;
+    product: StripeProduct;
     cartContext: CartContextType;
 }
 
@@ -52,9 +52,9 @@ const FavouritesButtons = ({ product, cartContext }: CartItemButtonProps) => {
     const { addItemToCart } = cartContext;
     const { user, setUser } = useContext(AuthContext);
     console.log(user)
-    const removeFavourite = async (productId: number) => {
+    const removeFavourite = async (productId: string) => {
         if (user && user.favourites) {
-            const newUserFaves = user.favourites.filter((favourite: Product) => favourite._id !== productId);
+            const newUserFaves = user.favourites.filter((favourite: StripeProduct) => favourite._id !== productId);
             const updatedUser = {
                 ...user,
                 favourites: newUserFaves,

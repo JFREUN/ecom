@@ -1,4 +1,4 @@
-import { Product } from "./product";
+import { Product, StripeProduct } from "./product";
 
 export type LoginUser = {
   email: string;
@@ -27,7 +27,7 @@ export type SignupUser = {
 export type User = {
   _id: string;
   email: string;
-  favourites?: Product[];
+  favourites?: StripeProduct[];
   firstName: string;
   lastName: string;
   addresses: Address[];

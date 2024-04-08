@@ -1,8 +1,8 @@
-import { Product } from "./product";
+import { StripeProduct } from "./product";
 
 export type Cart = {
   owner: number;
-  items: Product[];
+  items: StripeProduct[];
   bill: number;
 };
 

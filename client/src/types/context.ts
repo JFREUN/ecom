@@ -1,10 +1,11 @@
 import { Cart } from "./cart";
-import { Product } from "./product";
+import { Product, StripeProduct } from "./product";
 
 export type CartContextType = {
   cart: Cart | null;
-  addItemToCart: (product: Product) => void;
-  deleteItemFromCart: (id: number) => void;
-  removeItemFromCart: (product: Product) => void;
+  addItemToCart: (product: StripeProduct) => void;
+  deleteItemFromCart: (id: string) => void;
+  removeItemFromCart: (product: StripeProduct) => void;
   cartIsLoading: boolean;
+  clearCart: () => void;
 };

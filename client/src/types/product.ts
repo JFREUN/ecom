@@ -11,9 +11,11 @@ export type Product = {
 };
 
 export type StripeProduct = {
-  _id: number;
+  _id: string;
   name: string;
   description: string;
   price: number;
+  priceId: string;
   imageUrl: string | undefined;
+  quantity: number;
 };
