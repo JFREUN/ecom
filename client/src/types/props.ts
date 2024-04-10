@@ -1,4 +1,11 @@
-import { ContactDetails, ShippingDetails } from "./cart";
+import { Cart, ContactDetails, ShippingDetails } from "./cart";
+
+export type CartProps = {
+  cart: Cart | null;
+  cartIsLoading: boolean;
+  setShow?: (state: { cartItems: boolean; stepper: boolean }) => void;
+  clearCart?: () => void;
+};
 
 export type ContactFormProps = {
   handleNext: () => void;

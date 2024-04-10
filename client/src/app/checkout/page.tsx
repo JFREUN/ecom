@@ -15,16 +15,10 @@ import Shipping from '../components/checkout/Shipping';
 import { AuthContext } from '../context/AuthContext';
 import Payment from '../components/checkout/Payment';
 import axios from 'axios';
+import { CartProps } from '@/types/props';
+import { OrderTotal } from '../components/checkout/OrderTotal';
+import Link from 'next/link';
 
-type CartProps = {
-    cart: Cart | null;
-    cartIsLoading: boolean;
-    setShow?: (state: {
-        cartItems: boolean,
-        stepper: boolean,
-    }) => void;
-    clearCart?: () => void,
-}
 
 
 
@@ -37,7 +31,7 @@ const CheckoutPage = () => {
     return (
         <Container sx={{ py: "4rem", px: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <Box sx={{ width: "50%" }}>
-                {show.cartItems && <CartItems cart={cart} setShow={setShow} cartIsLoading={cartIsLoading} clearCart={clearCart} />}
+                <CartItems cart={cart} setShow={setShow} cartIsLoading={cartIsLoading} clearCart={clearCart} />
             </Box>
             <OrderTotal cart={cart} cartIsLoading={cartIsLoading} />
         </Container >
@@ -85,60 +79,35 @@ const CartItems = ({ cart, clearCart, cartIsLoading }: CartProps) => {
         }
     }
 
-    if (cartIsLoading) return <div>Loading....</div>
     return (
         <Box>
             <Typography variant="h2">My cart</Typography>
-            {cart && cart.items.length > 0 ?
-                <Box>
-                    {cart?.items.map((item) => (
-                        <CartItem product={item} key={item._id} isFavourite={false} />
-                    ))}
-                </Box> :
-                <Box sx={{ textAlign: "center" }}>
-                    <Typography variant="h5">Your cart is empty</Typography>
+            {cart?.items.length ?
+                <>
                     <Box>
+                        {cart?.items.map((item) => (
+                            <CartItem product={item} key={item._id} isFavourite={false} />
+                        ))}
+                    </Box>
+
+                    <Button variant='contained' sx={{ width: "100%" }} onClick={(e) => handleCheckout(e)}>Order now</Button>
+                    <Box sx={{ display: "flex", width: "100%", justifyContent: "center", gap: 2, my: 2 }}>
+                        {paymentMethods.map(({ name, icon }) => (
+                            <Image key={name} src={icon} alt="payment-method" width={30} />
+                        ))
+                        }
+                    </Box>
+                </> :
+                <Box sx={{ textAlign: "center", my: 4 }}>
+                    <Typography variant="h5">Your cart is empty</Typography>
+                    <Box sx={{ mb: 4 }}>
                         <SentimentVeryDissatisfiedIcon />
                     </Box>
+                    <Link href={"/products"}>
+                        <Button variant='contained' sx={{ width: "100%" }}>Shop now</Button>
+                    </Link>
                 </Box>}
-            <Button variant='contained' sx={{ width: "100%" }} onClick={(e) => handleCheckout(e)}>Order now</Button>
-            <Box sx={{ display: "flex", width: "100%", justifyContent: "center", gap: 2, my: 2 }}>
-                {paymentMethods.map(({ name, icon }) => (
-                    <Image key={name} src={icon} alt="payment-method" width={30} />
-                ))
-                }
-            </Box>
         </Box>
-    )
-}
-
-const OrderTotal = ({ cart }: CartProps) => {
-    return (
-        <Box sx={{ width: 300, backgroundColor: "#F6EBFF", p: 4, borderRadius: "5px" }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", mb: "1rem" }}>
-                <Typography variant="h5">Estimated Total:</Typography>
-                <Typography variant="subtitle1">{cart?.bill} €</Typography>
-            </Box>
-            <Typography>&#40;Shipping calculated at checkout&#41;</Typography>
-            <Divider sx={{ my: "2rem" }} />
-            <Box>
-                {cart?.items.map((item) => (
-                    <Box key={item._id} sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
-                        <Typography>{item.name}</Typography>
-                        <Typography>{item.price * item.quantity} €</Typography>
-                    </Box>
-                )
-                )}
-
-                <Divider sx={{ my: "2rem" }} />
-                <Box sx={{ display: "flex", alignItems: "stretch", justifyContent: "space-between" }}>
-                    <TextField variant='outlined' label="Voucher Code"
-                        placeholder="Voucher Code" sx={{ backgroundColor: "white" }} />
-                    <Button variant="outlined" >Enter</Button>
-                </Box>
-            </Box>
-        </Box>
-
     )
 }
 
