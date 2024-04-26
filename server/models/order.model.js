@@ -1,8 +1,7 @@
-import mongoose from "mongoose";
+const { Schema, model } = require("mongoose");
 
-const orderSchema = mongoose.Schema({
+const orderSchema = new Schema({
   shippingInfo: {
-    type: mongoose.Schema.Types.ObjectId,
     required: true,
     street: {
       type: String,
@@ -30,14 +29,14 @@ const orderSchema = mongoose.Schema({
     },
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     required: true,
     ref: "User",
   },
   orderItems: [
     {
       product: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         required: true,
         ref: "Product",
       },
@@ -81,7 +80,7 @@ const orderSchema = mongoose.Schema({
     type: String,
     default: "Processing",
   },
-  createAt: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
