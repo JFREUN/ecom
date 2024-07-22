@@ -26,6 +26,7 @@ export type SignupUser = {
 
 export type User = {
   _id: string;
+  stripeCustomerId: string;
   email: string;
   favourites?: StripeProduct[];
   firstName: string;

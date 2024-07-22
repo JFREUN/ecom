@@ -18,6 +18,7 @@ export const Account = () => {
     const handleUpdateUser = async (data: any) => {
         const updateUser: User = {
             _id: user?._id || " ",
+            stripeCustomerId: user?.stripeCustomerId || "",
             email: data.email,
             firstName: data.firstName,
             lastName: data.lastName,
