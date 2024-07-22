@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const orderSchema = new Schema({
   shippingInfo: {
-    street: {
+    address1: {
       type: String,
       required: [true, "Street is required."],
       trim: true,
@@ -39,19 +39,7 @@ const orderSchema = new Schema({
         ref: "Product",
         required: true,
       },
-      name: {
-        type: String,
-        required: true,
-      },
       quantity: {
-        type: String,
-        required: true,
-      },
-      imageUrl: {
-        type: String,
-        required: true,
-      },
-      price: {
         type: String,
         required: true,
       },
@@ -74,10 +62,6 @@ const orderSchema = new Schema({
       type: Number,
       required: true,
     },
-  },
-  orderStatus: {
-    type: String,
-    default: "Processing",
   },
   createdAt: {
     type: Date,

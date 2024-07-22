@@ -12,6 +12,10 @@ export type ContactFormProps = {
   handleBack: () => void;
   setContactDetails?: (prevState: ContactDetails) => void;
   setShippingDetails?: React.Dispatch<React.SetStateAction<ShippingDetails>>;
+  cart?: Cart | null;
+  cartIsLoading?: boolean;
+  clearCart?: () => void;
+  shippingDetails?: ShippingDetails;
 };
 
 export type SignupProps = {
@@ -43,4 +47,19 @@ export type FormProps = {
     country: string;
     postCode: string;
   };
+};
+
+export type AddAddressFormProps = {
+  openDialog: boolean;
+  setOpenDialog: (state: boolean) => void;
+};
+
+export type UserAddressesProps = {
+  setShippingDetails: React.Dispatch<React.SetStateAction<ShippingDetails>>;
+};
+
+export type CartStepperProps = {
+  cart: Cart | null;
+  cartIsLoading: boolean;
+  clearCart: () => void;
 };

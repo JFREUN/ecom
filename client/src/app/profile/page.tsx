@@ -28,6 +28,7 @@ type ProfileLink = {
 type ProfileNavProps = {
     profileLinks: ProfileLink[];
 }
+
 const ProfilePage = () => {
     const defaultLinks = {
         orders: false,
@@ -87,7 +88,6 @@ const ProfilePage = () => {
         if (user) setAllLinks((prevState) => ({ ...prevState, orders: true }))
     }, [user])
 
-    if (!isLoggedIn) router.push("/");
     return (
         <Container maxWidth="xl" fixed sx={{ py: "4rem", px: 3, display: "flex", gap: 3 }}>
             <ProfileNav profileLinks={profileLinks} />
@@ -112,7 +112,7 @@ const ProfileNav = ({ profileLinks }: ProfileNavProps) => {
                     <Icon sx={{ backgroundColor: "#CDBEF6", color: "white", borderRadius: "50%", p: 1 }}>
                         <PersonOutlinedIcon />
                     </Icon>
-                    <Typography>{user?.name}</Typography>
+                    <Typography>{user?.firstName}</Typography>
                 </Box>
                 <IconButton onClick={logOutUser}>
                     <CloseIcon />

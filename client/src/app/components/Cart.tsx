@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Divider, Drawer, Typography } from '@mui/material'
 import React, { useContext } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
-import { Product } from '@/types/product';
+import { Product, StripeProduct } from '@/types/product';
 import CartContext from '../context/CartContext';
 import CartItem from './CartItem';
 import IconButton from '@mui/material/IconButton';
@@ -15,7 +15,7 @@ type CartProps = {
 }
 const Cart = ({ open, toggleDrawer }: CartProps) => {
     const { cart } = useContext(CartContext);
-    const calculateTotalItems = (items: Product[]) => {
+    const calculateTotalItems = (items: StripeProduct[]) => {
         let totalItems = 0;
         items.forEach((item) => {
             totalItems += item.quantity;

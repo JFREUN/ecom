@@ -18,10 +18,9 @@ export type ContactDetails = {
 };
 
 export type ShippingDetails = {
-  address1: string;
-  address2?: string;
-  postCode: string;
+  street: string;
   city: string;
+  address2?: string;
   country: string;
-  type: "regular" | "express";
+  postCode: string;
 };

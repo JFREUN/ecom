@@ -18,10 +18,6 @@ const Shipping = ({ setShippingDetails, handleBack, cart, clearCart, shippingDet
         register,
         handleSubmit,
     } = useForm<ShippingDetails>()
-    useEffect(() => {
-        console.log(shippingDetails)
-
-    }, [shippingDetails])
 
 
     const handleCheckout = async () => {
@@ -32,17 +28,25 @@ const Shipping = ({ setShippingDetails, handleBack, cart, clearCart, shippingDet
             }
             return lineItem;
         })
+        const checkoutUrl = isLoggedIn ? "/api/payment/true" : "/api/payment/true";
+        const orderBody = isLoggedIn ? {
+            user,
+            lineItems: lineItems,
+            shippingInfo: JSON.stringify(shippingDetails),
+        } : {
+            customerEmail: user?.email,
+            lineItems: lineItems,
+            shippingInfo: JSON.stringify(shippingDetails),
+        };
+
+        console.log("Stringified json shipping: ", JSON.stringify(shippingDetails))
         try {
-            const { data } = await axios.post("/api/payment",
-                {
-                    customerEmail: user?.email,
-                    lineItems: lineItems,
-                    shippingInfo: JSON.stringify(shippingDetails),
-                }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            const { data } = await axios.post(checkoutUrl, orderBody
+                , {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
             clearCart!();
             window.location.assign(data)
             const query = new URLSearchParams(window.location.search);

@@ -1,28 +1,33 @@
 const Order = require("../models/order.model");
+const User = require("../models/user.model");
 const router = require("express").Router();
 
-router.post("/orders", (req, res, next) => {
-  const {
-    shippingInfo,
-    user,
-    orderStatus,
-    paymentInfo,
-    createdAt,
-    orderItems,
-  } = req.body;
+// Create a new order
+router.post("/orders", async (req, res) => {
+  try {
+    const { user, shippingInfo, paymentInfo, orderItems } = req.body;
 
-  Order.create({
-    shippingInfo,
-    user,
-    orderStatus,
-    paymentInfo,
-    createdAt,
-    orderItems,
-  })
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((err) => res.json(err));
+    // Validate user
+    const userExists = await User.findById(user);
+    if (!userExists) {
+      console.error(`Invalid user ID: ${user}`);
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    // Create new order
+    const newOrder = await Order.create({
+      shippingInfo,
+      user,
+      paymentInfo,
+      orderItems,
+    });
+
+    console.log("New Order created", newOrder);
+    res.status(200).json(newOrder);
+  } catch (err) {
+    console.error("Error creating order:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 router.get("/orders", (req, res, next) => {
