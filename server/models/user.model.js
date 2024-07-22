@@ -2,6 +2,12 @@ const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema(
   {
+    stripeCustomerId: {
+      type: String,
+      required: [true, "Stripe customer ID is required."],
+      unique: true,
+      trim: true,
+    },
     email: {
       type: String,
       required: [true, "Email is required."],
