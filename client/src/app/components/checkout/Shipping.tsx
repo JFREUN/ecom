@@ -1,29 +1,75 @@
 import { AuthContext } from '@/app/context/AuthContext'
 import { ShippingDetails } from '@/types/cart'
-import { ContactFormProps } from '@/types/props'
+
+import { AddAddressFormProps, ContactFormProps, UserAddressesProps } from '@/types/props'
 import { Address, User } from '@/types/user'
-import { Box, Button, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup, Typography, useColorScheme } from '@mui/material'
+import { Box, Button, TextField, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup, Typography, useColorScheme } from '@mui/material'
 import axios from 'axios'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import Dialog from '@mui/material/Dialog'
 import { AddressForm } from '../AddressForm'
 import CloseIcon from '@mui/icons-material/Close';
-type UserAddressesProps = {
-    setShippingDetails: React.Dispatch<React.SetStateAction<ShippingDetails>>;
-}
 
-const Shipping = ({ handleNext, setShippingDetails, handleBack }: ContactFormProps) => {
+
+const Shipping = ({ setShippingDetails, handleBack, cart, clearCart, shippingDetails }: ContactFormProps) => {
     const { isLoggedIn, user } = useContext(AuthContext);
     const {
         register,
         handleSubmit,
     } = useForm<ShippingDetails>()
+    useEffect(() => {
+        console.log(shippingDetails)
 
-    const onSubmit: SubmitHandler<ShippingDetails> = (data) => {
+    }, [shippingDetails])
+
+
+    const handleCheckout = async () => {
+        const lineItems = cart?.items.map((item) => {
+            const lineItem = {
+                price: item.priceId,
+                quantity: item.quantity,
+            }
+            return lineItem;
+        })
+        try {
+            const { data } = await axios.post("/api/payment",
+                {
+                    customerEmail: user?.email,
+                    lineItems: lineItems,
+                    shippingInfo: JSON.stringify(shippingDetails),
+                }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            clearCart!();
+            window.location.assign(data)
+            const query = new URLSearchParams(window.location.search);
+            if (query.get('success')) {
+                console.log('Order placed! You will receive an email confirmation.');
+            }
+
+            if (query.get('canceled')) {
+                console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+            }
+
+        } catch (error) {
+            console.error("Checkout failed:", error);
+        }
+    }
+
+    const onSubmit: SubmitHandler<ShippingDetails> = async (data) => {
         console.log("Form data:", data)
-        setShippingDetails!((prevState: ShippingDetails) => ({ ...prevState, type: data.type }));
-        handleNext()
+        setShippingDetails!((prevState: ShippingDetails) => ({
+            ...prevState,
+            street: data.street,
+            city: data.city,
+            address2: data.address2,
+            country: data.country,
+            postCode: data.postCode,
+        }));
+        await handleCheckout();
     }
     return (
         <Box >
@@ -31,22 +77,10 @@ const Shipping = ({ handleNext, setShippingDetails, handleBack }: ContactFormPro
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2, py: 4 }}>
                     <Typography variant="h5">Shipping</Typography>
                     {isLoggedIn && user && <LoggedInAddresses setShippingDetails={setShippingDetails!} />}
-                    <Box sx={{ border: "grey 1px solid", p: 2, borderRadius: "5px" }}>
-                        <FormControl>
-                            <FormLabel id="demo-radio-buttons-group-label">Select Shipping</FormLabel>
-                            <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
-                                defaultValue="regular"
-                                {...register("type", { required: true })}
-                            >
-                                <FormControlLabel value={"regular"} control={<Radio {...register("type", { required: true })} />} label="Regular - within 5 days - 1.25 €" />
-                                <FormControlLabel value={"express"} control={<Radio {...register("type", { required: true })} />} label="Express - within 48 hrs - 4.95 €" />
-                            </RadioGroup>
-                        </FormControl>
-                    </Box>
+                    {!isLoggedIn && <GuestAddress setShippingDetails={setShippingDetails!} />}
                     <Box sx={{ display: "flex", gap: 5 }}>
                         {!isLoggedIn && <Button onClick={handleBack} variant="contained" sx={{ width: "50%", py: 1 }}>Back</Button>}
-                        <Button type="submit" onClick={handleSubmit(onSubmit)} variant="contained" sx={{ width: "50%", py: 1 }}>Next</Button>
+                        <Button onClick={handleCheckout} variant="contained" sx={{ width: "50%", py: 1 }}>Next</Button>
                     </Box>
                 </Box>
             </form>
@@ -54,7 +88,62 @@ const Shipping = ({ handleNext, setShippingDetails, handleBack }: ContactFormPro
         </Box>
     )
 }
+const GuestAddress = ({ setShippingDetails }: UserAddressesProps) => {
+    const { register } = useForm<ShippingDetails>()
 
+    const onChangeField = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {
+        if (e.target.value) {
+            setShippingDetails!((prevState: ShippingDetails) => ({
+                ...prevState,
+                [fieldName]: e.target.value
+            }));
+        }
+    }
+
+    return (
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+            <TextField
+                required
+                id="outlined-required"
+                label="Street and House number"
+                defaultValue=""
+                onChange={(e) => onChangeField(e, "street")}
+            />
+            <TextField
+                id="outlined"
+                label="Optional addition, e.g. flat number"
+                defaultValue=""
+                onChange={(e) => onChangeField(e, "address2")}
+            />
+            <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
+                <TextField
+                    required
+                    sx={{ width: "50%" }}
+                    id="outlined-required"
+                    label="City"
+                    defaultValue=""
+                    onChange={(e) => onChangeField(e, "city")}
+                />
+                <TextField
+                    sx={{ width: "50%" }}
+                    required
+                    id="outlined-required"
+                    label="Post Code"
+                    defaultValue=""
+                    onChange={(e) => onChangeField(e, "postCode")}
+                />
+            </Box>
+            <TextField
+                required
+                id="outlined-required"
+                label="Country"
+                defaultValue=""
+                onChange={(e) => onChangeField(e, "country")}
+            />
+        </Box>
+    )
+}
 const LoggedInAddresses = ({ setShippingDetails }: UserAddressesProps) => {
     const { user } = useContext(AuthContext);
     const mainAddress = user?.addresses.find((address) => address.main === true);
@@ -105,10 +194,7 @@ const LoggedInAddresses = ({ setShippingDetails }: UserAddressesProps) => {
         </>
     )
 }
-type AddAddressFormProps = {
-    openDialog: boolean;
-    setOpenDialog: (state: boolean) => void;
-}
+
 const AddAddressForm = ({ openDialog, setOpenDialog }: AddAddressFormProps) => {
     return (
         <>
